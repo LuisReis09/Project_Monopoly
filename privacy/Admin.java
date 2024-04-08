@@ -99,6 +99,11 @@ public class Admin {
                             set.addActionListener(new ActionListener(){
                                 public void actionPerformed(ActionEvent e){
                                     String player = (String) players.getSelectedItem();
+
+                                    if(capital.getText().equals("") || position.getText().equals("") || name.getText().equals("")){
+                                        JOptionPane.showMessageDialog(null, "Preencha todos os campos!", "Erro", JOptionPane.ERROR_MESSAGE);
+                                        return;
+                                    }
                                     
                                     if(player.equals(tab.game.j1.getName())){
                                         tab.game.setCapital(Float.parseFloat(capital.getText()), tab.game.j1);
@@ -133,9 +138,11 @@ public class Admin {
                                         tab.game.j4.setName(name.getText());
                                     }
                                     
-                                    capital.setText("");
-                                    position.setText("");
+                                    capital.setText("0");
+                                    position.setText("0");
+                                    name.setText("name");
                                     login_field.setText("");
+                                    senha_field.setText("");
                                     frame_alterar.dispose();
                                     entrar.setEnabled(true);
                                     tab.verificaFalidos();
@@ -155,6 +162,9 @@ public class Admin {
                             frame_alterar.revalidate();
                             frame_alterar.repaint();
                             
+                        }else{
+                            JOptionPane.showMessageDialog(null, "Login ou senha incorretos!", "Erro", JOptionPane.ERROR_MESSAGE);
+                        
                         }
                     }
                 });
