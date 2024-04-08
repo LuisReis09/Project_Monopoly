@@ -10,6 +10,7 @@ public class Jogo implements Serializable{
     public Player j4 = new Player();
 
     public Player turn = j1;
+    public int qfalidos;
 
     public Jogo(){
         //algumas inicializoes padroes
@@ -23,14 +24,39 @@ public class Jogo implements Serializable{
         j3.setColor(62, 212, 250);
         j4.setColor(252, 73, 130);
 
-        j1.capital = (float) 8000;
-        j2.capital = (float) 8000;
-        j3.capital = (float) 8000;
-        j4.capital = (float) 8000;
+        j1.capital = (float) 7000;
+        j2.capital = (float) 7000;
+        j3.capital = (float) 7000;
+        j4.capital = (float) 7000;
     }
 
     public String Str_Players(){
         return j1.getName() + ", " + j2.getName() + ", " + j3.getName() + ", " + j4.getName();
+    }
+
+    public void quantFalidos(){
+        qfalidos = 0;
+        if(j1.getFalido())
+            qfalidos++;
+        if(j2.getFalido())
+            qfalidos++;
+        if(j3.getFalido())
+            qfalidos++;
+        if(j4.getFalido())
+            qfalidos++;
+    }
+
+    public Player procuraNaoFalido(){
+        if(!j1.getFalido())
+            return j1;
+        if(!j2.getFalido())
+            return j2;
+        if(!j3.getFalido())
+            return j3;
+        if(!j4.getFalido())
+            return j4;
+
+        return null;
     }
 
     public void nextTurn(){
@@ -79,6 +105,21 @@ public class Jogo implements Serializable{
 
         if(turn == j4)
             return j4;
+
+        return null;
+    }
+
+    public Player randomPlayer(){
+        int r = (int) (Math.random() * 4);
+        if(r == 0 && !j1.getFalido()){
+            return j1;
+        }else if(r == 1 && !j2.getFalido()){
+            return j2;
+        }else if(r == 2 && !j3.getFalido()){
+            return j3;
+        }else if(r == 3 && !j4.getFalido()){
+            return j4;
+        }
 
         return null;
     }

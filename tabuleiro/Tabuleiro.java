@@ -2,11 +2,14 @@ package tabuleiro;
 import objects.*;
 
 import java.awt.*;
+import java.io.Serializable;
+
 import javax.swing.*;
 //import java.awt.event.*;
 //import javax.swing.border.Border;
 
-public class Tabuleiro {
+public class Tabuleiro implements Serializable{
+    private static final long serialVersionUID = 3;
     Jogo game;
     JPanel tab = new JPanel();
     final int q= 38;
@@ -58,6 +61,25 @@ public class Tabuleiro {
         return number;
     }
 
+    public void verificaFalidos(){
+        if(game.getCapital(game.j1) <= 0){
+            game.j1.falencia = true;
+            falido1.setText("FALIU");
+        }
+        if(game.getCapital(game.j2) <= 0){
+            game.j2.falencia = true;
+            falido2.setText("FALIU");
+        }
+        if(game.getCapital(game.j3) <= 0){
+            game.j3.falencia = true;
+            falido3.setText("FALIU");
+        }
+        if(game.getCapital(game.j4) <= 0){
+            game.j4.falencia = true;
+            falido4.setText("FALIU");
+        }
+    }
+
     public JPanel getTabuleiro(){
         tab.setBounds(315, 10, 1200, 800);
         tab.setLayout(null);
@@ -69,7 +91,6 @@ public class Tabuleiro {
         preencheTab();
         preencheFuncoes();
         initCards();
-
 
         return tab;
     }
@@ -741,12 +762,18 @@ public class Tabuleiro {
         casas[34].setBackground(desocupada);
         casas[34].setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-        title[35] = new JLabel("Redemoinho");
+        title[35] = new JLabel("Imposto Geral");
+        valor[35] = (float) 400.00;
+        subtitle[35] = new JLabel("Valor: " + valor[35]);
         title[35].setBounds(0, 45, 105, 15);
+        subtitle[35].setBounds(0, 60, 105, 15);
         title[35].setFont(titulos);
+        subtitle[35].setFont(titulos);
         title[35].setHorizontalAlignment(SwingConstants.CENTER);
+        subtitle[35].setHorizontalAlignment(SwingConstants.CENTER);
         casas[35].setLayout(null);
         casas[35].add(title[35]);
+        casas[35].add(subtitle[35]);
         casas[35].setBackground(desocupada);
         casas[35].setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
@@ -841,25 +868,50 @@ public class Tabuleiro {
         subtitle[10].setText("Valor: " + this.valor[10]);
     }
 
-    public void updatePropriedade(int pos){
-        subtitle[pos].setText("Aluguel: " + this.valor[pos]);
-        casas[pos].setBackground(owner[pos].getColor());
+    public void updatePropriedade(){
+        int p, s;
+
+        if(game.j1.getFalido()){
+            s = game.j1.propriedades.size();
+            for(int i=0; i<s; i++){
+                p = game.j1.propriedades.get(i);
+                casas[p].setBackground(desocupada);
+                owner[p] = null;
+                game.j1.removePropriedade(game.j1.propriedades.get(p));
+            }
+        }
+
+        if(game.j2.getFalido()){
+            s = game.j2.propriedades.size();
+            for(int i=0; i<s; i++){
+                p = game.j2.propriedades.get(i);
+                casas[p].setBackground(desocupada);
+                owner[p] = null;
+                game.j2.removePropriedade(game.j2.propriedades.get(p));
+            }
+        }
+
+        if(game.j3.getFalido()){
+            s = game.j3.propriedades.size();
+            for(int i=0; i<s; i++){
+                p = game.j3.propriedades.get(i);
+                casas[p].setBackground(desocupada);
+                owner[p] = null;
+                game.j3.removePropriedade(game.j3.propriedades.get(p));
+            }
+        }
+
+        if(game.j4.getFalido()){
+            s = game.j4.propriedades.size();
+            for(int i=0; i<s; i++){
+                p = game.j4.propriedades.get(i);
+                casas[p].setBackground(desocupada);
+                owner[p] = null;
+                game.j4.removePropriedade(game.j4.propriedades.get(p));
+            }
+        }
     }	
 
-    public void updateFalido(){
-        if(game.j1.getFalido()){
-            falido1.setText("FALIU");
-        }
-        if(game.j2.getFalido()){
-            falido2.setText("FALIU");
-        }
-        if(game.j3.getFalido()){
-            falido3.setText("FALIU");
-        }
-        if(game.j4.getFalido()){
-            falido4.setText("FALIU");
-        }
-    }
 
     public void updateBackground(int p, Color cor){
         // Definir a nova cor de fundo da casa

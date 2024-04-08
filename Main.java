@@ -90,14 +90,22 @@ public class Main{
         load_game.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 try{
-                    FileInputStream fis = new FileInputStream("util/save.txt");
-                    ObjectInputStream ois = new ObjectInputStream(fis);
-                    game = new Jogo();
-                    game = (Jogo) ois.readObject();
-                    tab = new Tabuleiro(game);
-                    nav = new Nav(tab);
-                    fis.close();
-                    ois.close();
+                    FileInputStream fis_game = new FileInputStream("util/saveJogo.txt");
+                    FileInputStream fis_tab = new FileInputStream("util/saveTabuleiro.txt");
+                    FileInputStream fis_nav = new FileInputStream("util/saveNav.txt");
+                    ObjectInputStream ois_game = new ObjectInputStream(fis_game);
+                    ObjectInputStream ois_tab = new ObjectInputStream(fis_tab);
+                    ObjectInputStream ois_nav = new ObjectInputStream(fis_nav);
+                    game = (Jogo) ois_game.readObject();
+                    tab = (Tabuleiro) ois_tab.readObject();
+                    nav = (Nav) ois_nav.readObject();
+
+                    fis_game.close();
+                    fis_tab.close();
+                    fis_nav.close();
+                    ois_game.close();
+                    ois_tab.close();
+                    ois_nav.close();
                 }catch(Exception ex){
                     System.out.println("\nHouve um ERRO: " + ex.getMessage());
                 }
@@ -240,11 +248,22 @@ public class Main{
         savegame.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
                 try{
-                    FileOutputStream fos = new FileOutputStream("util/save.txt");
-                    ObjectOutputStream oos = new ObjectOutputStream(fos);
-                    oos.writeObject(game);
-                    fos.close();
-                    oos.close();
+                    FileOutputStream fos_game = new FileOutputStream("util/saveJogo.txt");
+                    FileOutputStream fos_tab = new FileOutputStream("util/saveTabuleiro.txt");
+                    FileOutputStream fos_nav = new FileOutputStream("util/saveNav.txt");
+                    ObjectOutputStream oos_game = new ObjectOutputStream(fos_game);
+                    ObjectOutputStream oos_tab = new ObjectOutputStream(fos_tab);
+                    ObjectOutputStream oos_nav = new ObjectOutputStream(fos_nav);
+                    oos_game.writeObject(game);
+                    oos_tab.writeObject(tab);
+                    oos_nav.writeObject(nav);
+
+                    fos_game.close();
+                    fos_tab.close();
+                    fos_nav.close();
+                    oos_game.close();
+                    oos_tab.close();
+                    oos_nav.close();
                 }catch(Exception exc){
                     System.out.println("Houve um ERRO: " + exc.getMessage());
                 }

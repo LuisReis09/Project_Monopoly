@@ -2,11 +2,13 @@ package tabuleiro;
 import objects.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.Serializable;
 
 import javax.swing.*;
 //import java.awt.event.*;
 
-public class Nav {
+public class Nav implements Serializable{
+    private static final long serialVersionUID = 4;
     Tabuleiro tab = new Tabuleiro(null);
     JLabel vez = new JLabel();
     JButton rolardado = new JButton("Rolar o Dado");
@@ -44,8 +46,8 @@ public class Nav {
                 }
                 showRodada(tab.game.getTurn(), tab.game.getTurn().getPosition(), tab.game.getTurn().getPreso());
 
-                
-                tab.updateFalido();
+                tab.verificaFalidos();
+                tab.updatePropriedade();
                 tab.game.nextTurn();
                 updateTurn();
             }
@@ -78,10 +80,28 @@ public class Nav {
         yes.setEnabled(false);
         no.setEnabled(false);
         if(yes.getActionListeners().length > 0)
-            yes.removeActionListener(yes.getActionListeners()[0]);
-
+        yes.removeActionListener(yes.getActionListeners()[0]);
+        
         if(no.getActionListeners().length > 0)
-            no.removeActionListener(no.getActionListeners()[0]);
+        no.removeActionListener(no.getActionListeners()[0]);
+        
+        tab.game.quantFalidos();
+        if(tab.game.qfalidos == 3){
+            String text = "Fim de Jogo!\n";
+            text += "O jogador " + tab.game.procuraNaoFalido().getName() + " venceu!";
+            show.setFont(new Font(null, Font.BOLD, 20));
+            show.setText(text);
+
+            yes.setEnabled(true);
+            yes.setText("Fim de Jogo");
+            rolardado.setEnabled(false);
+            yes.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e){
+                    System.exit(0);
+                }
+            });
+            return;
+        }
 
         if(preso){
             String text = player_name + " está preso por mais " + player.updatePreso() + " rodadas";
@@ -109,7 +129,7 @@ public class Nav {
             return;
         }
 
-        if(p==5||p==35||p==21){
+        if(p==5||p==21){
             String text = player_name + " sorteou o número: " + random + ".\n\n";
             text += "\n" + player_name + " caiu no Redemoinho";
             text += "\n" + player_name + " será redirecionado pra uma casa aleatória";
@@ -126,6 +146,7 @@ public class Nav {
                     tab.attPositionbySwirl(player, x);
                     String text2 = "";
                     text2 += player_name + " foi redirecionado para a casa " + x;
+                    text2 += "\nNão sofre as consequências da casa";
                     text2 += "\nCapital: " + tab.game.getCapital(player);
                     text2 += "\nContinue Jogando!";
                     show.setText(text2);
@@ -138,10 +159,10 @@ public class Nav {
             return;
         }
 
-        if(p==16){
+        if(p==16||p==35){
             String text = player_name + " sorteou o número: " + random + ".\n\n";
             text += player_name + " parou no Imposto Geral";
-            text += "\nTodos os jogadores perderão $200";
+            text += "\nTodos os jogadores perderão $" + tab.valor[p];
 
             yes.setEnabled(true);
             yes.setText("Cobrar Imposto Geral");
@@ -150,36 +171,36 @@ public class Nav {
                 public void actionPerformed(ActionEvent e){
                     yes.setEnabled(false);
                     String text2 = "";
-                    if(tab.game.getCapital(tab.game.j1)>200){
-                        tab.game.dimCapital(200, tab.game.j1);
+                    if(tab.game.getCapital(tab.game.j1)>tab.valor[p]){
+                        tab.game.dimCapital(tab.valor[p], tab.game.j1);
                         tab.updateCapital(tab.game.j1);
-                        tab.updateBanco(200);
+                        tab.updateBanco(tab.valor[p]);
                     }else{
                         tab.game.j1.falencia = true;
                     }
-                    if(tab.game.getCapital(tab.game.j2)>200){
-                        tab.game.dimCapital(200, tab.game.j2);
+                    if(tab.game.getCapital(tab.game.j2)>tab.valor[p]){
+                        tab.game.dimCapital(tab.valor[p], tab.game.j2);
                         tab.updateCapital(tab.game.j2);
-                        tab.updateBanco(200);
+                        tab.updateBanco(tab.valor[p]);
                     }else{
                         tab.game.j2.falencia = true;
                     }
-                    if(tab.game.getCapital(tab.game.j3)>200){
-                        tab.game.dimCapital(200, tab.game.j3);
+                    if(tab.game.getCapital(tab.game.j3)>tab.valor[p]){
+                        tab.game.dimCapital(tab.valor[p], tab.game.j3);
                         tab.updateCapital(tab.game.j3);
-                        tab.updateBanco(200);
+                        tab.updateBanco(tab.valor[p]);
                     }else{
                         tab.game.j3.falencia = true;
                     }
-                    if(tab.game.getCapital(tab.game.j4)>200){
-                        tab.game.dimCapital(200, tab.game.j4);
+                    if(tab.game.getCapital(tab.game.j4)>tab.valor[p]){
+                        tab.game.dimCapital(tab.valor[p], tab.game.j4);
                         tab.updateCapital(tab.game.j4);
-                        tab.updateBanco(200);
+                        tab.updateBanco(tab.valor[p]);
                     }else{
                         tab.game.j4.falencia = true;
                     }
         
-                    text2 += "\nTodos perderam $200";
+                    text2 += "\nTodos perderam $" + tab.valor[p];
                     text2 += "\nNovo Valor do Banco: " + tab.valor[10];
                     text2 += "\nContinue Jogando!";
                     show.setText(text2);
@@ -217,9 +238,9 @@ public class Nav {
                         text2 += player_name + " perdeu 5% de seu capital";
                         tab.updateBanco(0.05f*cpt);
                         text2 += "\nAh, não! Mais sorte na próxima!";
+                        text2 += "\nNovo valor do banco: " + tab.valor[10];
                     }
                     tab.updateCapital(player);
-                    text2 += "\nNovo valor do banco: " + tab.valor[10];
                     text2 += "\nNovo Capital: " + tab.game.getCapital(player);
 
                     show.setText(text2);
@@ -227,11 +248,11 @@ public class Nav {
                     return;
                 }
             });
-
+            
             show.setText(text);
             return;
         }
-
+        
         if(p==10){
             String text = player_name + " sorteou o número: " + random + ".\n\n";
             text += "Que sorte! " + player_name + " parou no BANCO!";
@@ -258,6 +279,20 @@ public class Nav {
                 }
             });
 
+            show.setText(text);
+            return;
+        }
+
+        if(p==13){
+            String text = player_name + " sorteou o número: " + random + ".\n\n";
+            text += player_name + " caiu na casa de imposto de renda, perdeu 10% do seu capital.";
+            float value = tab.game.getCapital(player)*0.1f;
+            tab.game.dimCapital(value, player);
+            tab.updateCapital(player);
+            tab.updateBanco(value);
+            text += "\nCapital: " + tab.game.getCapital(player);
+            text += "\nNovo Valor do Banco: " + tab.valor[10];
+            text += "\nContinue Jogando!" + p;
             show.setText(text);
             return;
         }
@@ -299,6 +334,25 @@ public class Nav {
                         no.setEnabled(false);
                         String text2 = "";
                         text2 += player_name + " não pagou e ficará preso";
+                        text2 += "\nCapital: " + tab.game.getCapital(player);
+                        text2 += "\nContinue jogando!";
+                        show.setText(text2);
+                        rolardado.setEnabled(true);
+                        return;
+                    }
+                });
+            }else{
+                text += "\n" + player_name + " não possui capital suficiente para pagar fiança";
+                text += "\n" + player_name + " ficará preso";
+                text += "\nCapital: " + tab.game.getCapital(player);
+                yes.setEnabled(true);
+                yes.setText("Ok");
+                rolardado.setEnabled(false);
+                yes.addActionListener(new ActionListener(){
+                    public void actionPerformed(ActionEvent e){
+                        yes.setEnabled(false);
+                        String text2 = "";
+                        text2 += player_name + " ficará preso";
                         text2 += "\nCapital: " + tab.game.getCapital(player);
                         text2 += "\nContinue jogando!";
                         show.setText(text2);
@@ -387,9 +441,134 @@ public class Nav {
                     return;
                 }
             });
+
+            show.setText(text);
+            return;
         }
 
-        if(((p>=1&&p<=9)&&p!=3&&p!=5&&p!=7)||p==11||p==12||p==14||p==15||p==17||p==18){
+        if(p==29){
+            String text = player_name + " sorteou o número: " + random + ".\n\n";
+            text += player_name + " parou na Lotérica";
+            text += "\nQue sorte!";
+            text += "\n" + player_name + " poderá receber uma propriedade";
+            text += "\nCaso não tenha nenhuma propriedade disponível, tomará uma aleatória";
+
+            yes.setEnabled(true);
+            yes.setText("Receber Propriedade");
+            rolardado.setEnabled(false);
+
+            yes.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e){
+                    yes.setEnabled(false);
+                    for(int i= 0; i<38; i++){
+                        if(tab.title[i].getText()=="Propriedade"&&tab.owner[i]==null){
+                            tab.casas[i].setBackground(player.getColor());
+                            tab.owner[i] = player;
+                            player.addPropriedade(i);
+                            String text2 = "";
+                            text2 += player_name + " recebeu a propriedade " + i;
+                            text2 += "\nContinue jogando!";
+                            show.setText(text2);
+                            rolardado.setEnabled(true);
+                            return;
+                        }
+                    }
+
+                    Player p;
+                    while(true){
+                        p = tab.game.randomPlayer();
+                        if(p!=player&&!p.propriedades.isEmpty()){
+                            break;
+                        }
+                    }
+                    
+                    int x = p.randomPropriedade();
+                    p.removePropriedade(x);
+                    tab.casas[x].setBackground(player.getColor());
+                    tab.owner[x] = player;
+                    player.addPropriedade(x);
+                    String text2 = "";
+                    text2 += player_name + " tomou a propriedade " + x + " de " + p.getName();
+                    text2 += "\nContinue jogando!";
+                    show.setText(text2);
+                    rolardado.setEnabled(true);
+                    return;
+                }
+            });
+        }
+
+        if(p==31){
+            String text = player_name + " sorteou o número: " + random + ".\n\n";
+            text += player_name + " parou na casa de Assalto";
+            text += "\n" + player_name + " roubará uma propriedade de outro jogador";
+            text += "\nCaso não haja propriedades disponíveis para roubo, nada acontecerá";
+            text += "\nPorém, " + player_name + " irá direto para a prisão";
+
+            yes.setEnabled(true);
+            yes.setText("Roubar");
+            rolardado.setEnabled(false);
+
+            yes.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e){
+                    yes.setEnabled(false);
+                    Player p;
+                    String text2 = "";
+                    if(tab.game.j1.propriedades.isEmpty()&&tab.game.j2.propriedades.isEmpty()&&tab.game.j3.propriedades.isEmpty()&&tab.game.j4.propriedades.isEmpty()){
+                        text2 += player_name + " não conseguiu roubar nenhuma propriedade";
+                        text2 += "\nnão possui propriedades para roubo"; 
+                        show.setText(text2);
+                        rolardado.setEnabled(true);
+                        return;
+                    }
+                    while(true){
+                        p = tab.game.randomPlayer();
+                        if(p!=player&&!p.propriedades.isEmpty()){
+                            break;
+                        }
+
+                    }
+                    
+                    int x = p.randomPropriedade();
+                    p.removePropriedade(x);
+                    tab.casas[x].setBackground(player.getColor());
+                    tab.owner[x] = player;
+                    player.addPropriedade(x);
+                    text2 += player_name + " tomou a propriedade " + x + " de " + p.getName();
+                    show.setText(text2);
+                    no.setEnabled(true);
+                    no.setText("Ir para Prisão");
+                    no.addActionListener(new ActionListener(){
+                        public void actionPerformed(ActionEvent e){
+                            no.setEnabled(false);
+                            tab.attPosition(player, 19);
+                            showRodada(player, 19, false);
+                            
+                            return;
+                        }
+                    });
+                }
+            });
+
+            show.setText(text);
+            return;
+        }
+
+        if(p==34){
+            String text = player_name + " sorteou o número: " + random + ".\n\n";
+            text += player_name + " parou na casa de Imposto Veicular";
+            text += "\n" + player_name + " pagou 5% de imposto sobre o Capital";
+            tab.updateBanco(0.05f*tab.game.getCapital(player));
+            tab.game.dimCapital(tab.game.getCapital(player)*0.05f, player);
+            tab.updateCapital(player);
+            text += "\nNovo Capital: " + tab.game.getCapital(player);
+            text += "\nNovo Valor do Banco: " + tab.valor[10];
+            text += "\nContinue jogando!";
+            show.setText(text);      
+            return;      
+        }
+
+        //Caso Geral: Cair em Propriedade
+        if(true){
             String text = player_name + " sorteou o número: " + random + ".\n\n";
 
             rolardado.setEnabled(false);
@@ -465,7 +644,7 @@ public class Nav {
                             tab.game.dimCapital(custo_ampliar, player);
                             tab.updateCapital(player);
                             tab.valor[p] = custo_ampliar;
-                            tab.updatePropriedade(p);
+                            tab.subtitle[p].setText("Aluguel: " + tab.valor[p]);
                             text2 += player_name + " ampliou a propriedade";
                             text2 += "\nNovo Custo: " + tab.valor[p];
                             text2 += "\nCapital: " + tab.game.getCapital(player);
@@ -595,22 +774,6 @@ public class Nav {
                 }
             }
 
-            show.setText(text);
-            return;
-        }
-        
-        
-        
-        if(p==13){
-            String text = player_name + " sorteou o número: " + random + ".\n\n";
-            text += player_name + " caiu na casa de imposto de renda, perdeu 10% do seu capital.";
-            float value = tab.game.getCapital(player)*0.1f;
-            tab.game.dimCapital(value, player);
-            tab.updateCapital(player);
-            tab.updateBanco(value);
-            text += "\nCapital: " + tab.game.getCapital(player);
-            text += "\nNovo Valor do Banco: " + tab.valor[10];
-            text += "\nContinue Jogando!" + p;
             show.setText(text);
             return;
         }
