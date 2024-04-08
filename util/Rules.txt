@@ -1,0 +1,3 @@
+Monopoly é um jogo de tabuleiro que consiste em administração de recursos. O objetivo é que você seja o jogador mais rico ao final, falindo seus inimigos.
+Cada jogador será representado por uma peça colorida que irá o representar. Na rodada de cada jogador, será gerado um número aleatório que funcionará como um dado para que percorram as casas.
+Prepare-se para divertir e investir. Não se preocupe, será bastante intuitivo!
