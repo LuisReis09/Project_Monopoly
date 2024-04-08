@@ -22,7 +22,7 @@ public class Jogo implements Serializable{
         j1.setColor(238, 245, 54);
         j2.setColor(59, 245, 59);
         j3.setColor(62, 212, 250);
-        j4.setColor(252, 73, 130);
+        j4.setColor(250, 127, 148);
 
         j1.capital = (float) 7000;
         j2.capital = (float) 7000;
@@ -175,6 +175,22 @@ public class Jogo implements Serializable{
                 j4.falencia = true;
             }
             return;
+        }
+    }
+
+    public void setCapital(float valor, Player pl){
+        if(pl == j1){
+            j1.capital = valor;
+        }else if(pl == j2){
+            j2.capital = valor;
+        }else if(pl == j3){
+            j3.capital = valor;
+        }else if(pl == j4){
+            j4.capital = valor;
+        }
+
+        if(pl.capital <= 0){
+            pl.falencia = true;
         }
     }
 }

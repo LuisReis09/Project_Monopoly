@@ -7,6 +7,7 @@ import java.io.*;
 import java.util.Scanner;
 import tabuleiro.*;
 import objects.*;
+import privacy.Admin;
 
 public class Main{
     Jogo game;
@@ -287,11 +288,18 @@ public class Main{
         fmmenu = nav.getPanel();
         mmenu.add(fmmenu);
 
+        Admin admin = new Admin(tab);
+        JPanel adm = new JPanel();
+        adm = admin.getJPanel();
+        adm.setBounds(0, 613, 300, 37);
+        tabuleiro.add(adm);
+
 
 
         tabuleiro.add(imagem);
         janela.add(mmenu);
         janela.add(tabuleiro);
+        tabuleiro.repaint();
         janela.repaint();
     }
 }

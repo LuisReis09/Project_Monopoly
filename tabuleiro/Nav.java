@@ -1,5 +1,6 @@
 package tabuleiro;
 import objects.*;
+import privacy.Admin;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.Serializable;
@@ -24,7 +25,6 @@ public class Nav implements Serializable{
     public JPanel getPanel(){
         JPanel panel = new JPanel();
         panel.setBounds(0, 0, 300, 650);
-        panel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
         panel.setLayout(null);
 
         updateTurn();
@@ -46,6 +46,7 @@ public class Nav implements Serializable{
                 }
                 showRodada(tab.game.getTurn(), tab.game.getTurn().getPosition(), tab.game.getTurn().getPreso());
 
+                tab.redefineBorders();
                 tab.verificaFalidos();
                 tab.updatePropriedade();
                 tab.game.nextTurn();
@@ -495,6 +496,9 @@ public class Nav implements Serializable{
                     return;
                 }
             });
+
+            show.setText(text);
+            return;
         }
 
         if(p==31){
@@ -760,6 +764,8 @@ public class Nav implements Serializable{
                     int x = player.randomPropriedade();
                     player.removePropriedade(x);
                     tab.casas[x].setBackground(tab.owner[p].getColor());
+                    tab.valor[x] = (float) 250;
+                    tab.ampliacoes[x] = 0;
                     text += "\n" + player_name + " perdeu a propriedade da casa " + x;
                     text += "\n" + tab.owner[p] + " agora é proprietário da casa " + x;
                     text += "\nContinue Jogando!";

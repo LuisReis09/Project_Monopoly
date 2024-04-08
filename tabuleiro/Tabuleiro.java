@@ -10,7 +10,7 @@ import javax.swing.*;
 
 public class Tabuleiro implements Serializable{
     private static final long serialVersionUID = 3;
-    Jogo game;
+    public Jogo game;
     JPanel tab = new JPanel();
     final int q= 38;
     boolean started = false;
@@ -30,10 +30,10 @@ public class Tabuleiro implements Serializable{
     JPanel card_j2 = new JPanel();
     JPanel card_j3 = new JPanel();
     JPanel card_j4 = new JPanel();
-    JLabel name_j1 = new JLabel();
-    JLabel name_j2 = new JLabel();
-    JLabel name_j3 = new JLabel();
-    JLabel name_j4 = new JLabel();
+    public JLabel name_j1 = new JLabel();
+    public JLabel name_j2 = new JLabel();
+    public JLabel name_j3 = new JLabel();
+    public JLabel name_j4 = new JLabel();
     JLabel capital_j1 = new JLabel();
     JLabel capital_j2 = new JLabel();
     JLabel capital_j3 = new JLabel();  
@@ -65,18 +65,22 @@ public class Tabuleiro implements Serializable{
         if(game.getCapital(game.j1) <= 0){
             game.j1.falencia = true;
             falido1.setText("FALIU");
+            pino_j1.setVisible(false);
         }
         if(game.getCapital(game.j2) <= 0){
             game.j2.falencia = true;
             falido2.setText("FALIU");
+            pino_j2.setVisible(false);
         }
         if(game.getCapital(game.j3) <= 0){
             game.j3.falencia = true;
             falido3.setText("FALIU");
+            pino_j3.setVisible(false);
         }
         if(game.getCapital(game.j4) <= 0){
             game.j4.falencia = true;
             falido4.setText("FALIU");
+            pino_j4.setVisible(false);
         }
     }
 
@@ -85,14 +89,26 @@ public class Tabuleiro implements Serializable{
         tab.setLayout(null);
         tab.setOpaque(false);
 
+        initPinos();
         if(!started)
             configPosition();
-        initPinos();
         preencheTab();
         preencheFuncoes();
         initCards();
-
+        repaintBackgrounds();
+            
         return tab;
+    }
+
+    public void redefineBorders(){
+        pino_j1.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        pino_j2.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        pino_j3.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        pino_j4.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        pino_j1.setBackground(Color.YELLOW);
+        pino_j2.setBackground(Color.GREEN);
+        pino_j3.setBackground(Color.BLUE);
+        pino_j4.setBackground(Color.RED);
     }
 
     public void configPosition(){
@@ -267,6 +283,8 @@ public class Tabuleiro implements Serializable{
             capital_j4.setText("Capital: " + game.getCapital(game.j4));
             return;
         }
+
+        verificaFalidos();
     }
 
     public void preencheFuncoes(){
@@ -912,10 +930,12 @@ public class Tabuleiro implements Serializable{
         }
     }	
 
-
-    public void updateBackground(int p, Color cor){
-        // Definir a nova cor de fundo da casa
-        casas[p].setBackground(cor);
+    public void repaintBackgrounds(){
+        for(int i=0; i<38; i++){
+            if(owner[i] != null){
+                casas[i].setBackground(owner[i].getColor());
+            }
+        }
     }
 
     public int randomSwirl(){
