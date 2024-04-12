@@ -72,6 +72,31 @@ public class Main{
         load_game.setBounds(300, 420, 200, 30);
         start_new_game.setBackground(new Color(255,220,73));
 
+        txt_j1.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "nextfield");
+        txt_j1.getActionMap().put("nextfield", new AbstractAction(){
+            public void actionPerformed(ActionEvent e){
+                txt_j2.requestFocus();
+            }
+        });
+        txt_j2.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "nextfield");
+        txt_j2.getActionMap().put("nextfield", new AbstractAction(){
+            public void actionPerformed(ActionEvent e){
+                txt_j3.requestFocus();
+            }
+        });
+        txt_j3.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "nextfield");
+        txt_j3.getActionMap().put("nextfield", new AbstractAction(){
+            public void actionPerformed(ActionEvent e){
+                txt_j4.requestFocus();
+            }
+        });
+        txt_j4.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "nextfield");
+        txt_j4.getActionMap().put("nextfield", new AbstractAction(){
+            public void actionPerformed(ActionEvent e){
+                start_new_game.doClick();
+            }
+        });
+
         start_new_game.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
                 game = new Jogo();
@@ -146,12 +171,12 @@ public class Main{
 
         //criacao do painel de apresentacao
         JPanel apresentacao = new JPanel();
-        apresentacao.setBounds(50, 100, 900, 500);
+        apresentacao.setBounds(50, 100, 900, 600);
         apresentacao.setLayout(null);
         apresentacao.setOpaque(false);
 
         //label titulo
-        JLabel strapresentacao = new JLabel("APRESENTACAO");
+        JLabel strapresentacao = new JLabel("APRESENTAÇÃO");
         strapresentacao.setBounds(50, 50, 800, 100);
         strapresentacao.setFont(new Font("Arial", Font.BOLD, 80));
         strapresentacao.setHorizontalAlignment(SwingConstants.CENTER);
@@ -162,16 +187,23 @@ public class Main{
         bvs.setBounds(100, 140, 700, 20);
         bvs.setHorizontalAlignment(SwingConstants.CENTER);
         bvs.setForeground(Color.WHITE);
-
+        
         //Caixa de texto de explicacao do jogo
         JTextArea rules = new JTextArea();
-        rules.setBounds(100, 200, 700, 280);
         rules.setLineWrap(true);
+        rules.setWrapStyleWord(true);
         rules.setEditable(false);
-        rules.setFont(new Font("Times New Roman", Font.PLAIN, 16));
+        rules.setFont(new Font("Arial", Font.PLAIN, 18));
         rules.setOpaque(false);
-        rules.setForeground(Color.WHITE);
         rules.setAutoscrolls(true);
+        rules.setForeground(Color.WHITE);
+        rules.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        JScrollPane rules_scroll = new JScrollPane(rules);
+        rules_scroll.setBounds(100, 200, 700, 280);
+
+        JViewport vp = rules_scroll.getViewport();
+        vp.setBackground(new Color(67, 88, 146));
+        apresentacao.add(rules_scroll);
 
         //importacao do arquivo de regras
         String banco = "";
@@ -188,7 +220,7 @@ public class Main{
         rules.setText(banco);
 
         JButton st = new JButton("Start");
-        st.setBounds(400, 470, 100, 30);
+        st.setBounds(400, 500, 150, 30);
 
         st.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
@@ -197,7 +229,6 @@ public class Main{
             }
         });
 
-        apresentacao.add(rules);
         janela.add(apresentacao);
         janela.add(imagem);
         apresentacao.add(strapresentacao);

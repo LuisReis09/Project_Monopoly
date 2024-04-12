@@ -24,10 +24,10 @@ public class Jogo implements Serializable{
         j3.setColor(62, 212, 250);
         j4.setColor(250, 127, 148);
 
-        j1.capital = (float) 7000;
-        j2.capital = (float) 7000;
-        j3.capital = (float) 7000;
-        j4.capital = (float) 7000;
+        j1.capital = (float) 6000;
+        j2.capital = (float) 6000;
+        j3.capital = (float) 6000;
+        j4.capital = (float) 6000;
     }
 
     public String Str_Players(){

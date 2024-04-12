@@ -1,3 +1,25 @@
-Monopoly é um jogo de tabuleiro que consiste em administração de recursos. O objetivo é que você seja o jogador mais rico ao final, falindo seus inimigos.
-Cada jogador será representado por uma peça colorida que irá o representar. Na rodada de cada jogador, será gerado um número aleatório que funcionará como um dado para que percorram as casas.
-Prepare-se para divertir e investir. Não se preocupe, será bastante intuitivo!
+Olá, este é o Monopoly!
+
+Monopoly é um jogo de tabuleiro que consiste em sorte e administração do capital.
+Cada player será identificado por uma cor e todos iniciarão com o mesmo capital.
+Ao decorrer do tabuleiro, os jogadores poderão passar por diversas casas que podem ter efeitos diferentes.
+O objetivo é falir os inimigos e se tornar o mais rico do jogo. 
+Não se preocupem! Ao passar pelas casas, nosso sistema informará para vocês o que aconteceu.
+Quando um jogador falir, ele é automaticamente retirado da sucessão dos jogos, o pino que o representa também será retirado.
+
+A cada rodada, um jogador sorteará um número aleatório entre 1 e 6 (inclusive), representando um "dado" para prosseguir pelo tabuleiro.
+A todo momento, os jogadores poderão acompanhar seus capitais e suas propriedades através da nossa interface gráfica.
+
+Resumo das Casas e seus efeitos no jogo:
+- Início: é a casa de partida do jogo, onde todos os jogadores começam, é seguro cair nesta casa, pois não haverá consequêcias.
+- Propriedades: são casas que podem ser adquiridas pelos jogadores, quando inimigos passam por elas, sofrem consequêcias. Geralmente, devem pagar aluguel ao dono.
+- Praça Pública: casa segura a todos os jogadores, pois não sofrem consequêcias.
+- Banco: uma das casas de maior sorte do jogo. Todas as arrecadações de impostos e jogos de azar vão para o banco. O jogador que parar nesta casa poderá levar todo o capital armazenado lá.
+- Prisão: os jogadores que cairem nessa casa de azar podem escolher pagar fiança ou passar 3 rodadas preso.
+- Redemoinhos: são casas caóticas, pois podem te levar a qualquer lugar do tabuleiro. Porém, não sofrerá consequência de onde parar.
+- Casas de Impostos: são aplicados impostos individuais ou coletivos aos jogadores, sofrendo prejuízo capital.
+- Sorte ou Azar?: aleatoriamente, um jogador pode receber ou perder 5% de seu capital (jogo de azar).
+- Lotérica: uma das casas de maior sorte do jogo. O jogador pode receber uma casa aleatória no mapa.
+- Assalto: um jogador rouba aleatoriamente uma casa de um inimigo, porém é direcionado diretamente para a prisão.
+
+Bom jogo e boa sorte, jogadores!

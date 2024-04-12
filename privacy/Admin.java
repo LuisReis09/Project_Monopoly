@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class Admin {
+public class Admin{
     JPanel panel = new JPanel();
     JButton entrar = new JButton("Entrar");
     JFrame frame = new JFrame("Admin");
@@ -43,6 +43,19 @@ public class Admin {
                 
                 JPasswordField senha_field = new JPasswordField();
                 senha_field.setBounds(150, 100, 200, 30);
+
+                login_field.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "nextfield");
+                login_field.getActionMap().put("nextfield", new AbstractAction(){
+                    public void actionPerformed(ActionEvent e){
+                        senha_field.requestFocus();
+                    }
+                });
+                senha_field.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "nextfield");
+                senha_field.getActionMap().put("nextfield", new AbstractAction(){
+                    public void actionPerformed(ActionEvent e){
+                        entrar.doClick();
+                    }
+                });
                 
                 entrar.setBounds(200, 150, 100, 30);
                 
@@ -96,6 +109,25 @@ public class Admin {
                             JButton set = new JButton("Alterar");
                             set.setBounds(200, 300, 100, 30);
 
+                            capital.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "nextfield");
+                            capital.getActionMap().put("nextfield", new AbstractAction(){
+                                public void actionPerformed(ActionEvent e){
+                                    position.requestFocus();
+                                }
+                            });
+                            position.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "nextfield");
+                            position.getActionMap().put("nextfield", new AbstractAction(){
+                                public void actionPerformed(ActionEvent e){
+                                    name.requestFocus();
+                                }
+                            });
+                            name.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "nextfield");
+                            name.getActionMap().put("nextfield", new AbstractAction(){
+                                public void actionPerformed(ActionEvent e){
+                                    set.doClick();
+                                }
+                            });
+
                             set.addActionListener(new ActionListener(){
                                 public void actionPerformed(ActionEvent e){
                                     String player = (String) players.getSelectedItem();
@@ -127,7 +159,7 @@ public class Admin {
                                         tab.attPosition(tab.game.j3, tab.game.j3.getPosition());
                                         tab.updateCapital(tab.game.j3);
                                         tab.game.j3.setName(name.getText());
-                                        tab.game.j3.setName(name.getText());
+                                        tab.name_j3.setText(tab.game.j3.getName());
 
                                     }else if(player.equals(tab.game.j4.getName())){
                                         tab.game.setCapital(Float.parseFloat(capital.getText()), tab.game.j4);
@@ -135,7 +167,7 @@ public class Admin {
                                         tab.attPosition(tab.game.j4, tab.game.j4.getPosition());
                                         tab.updateCapital(tab.game.j4);
                                         tab.game.j4.setName(name.getText());
-                                        tab.game.j4.setName(name.getText());
+                                        tab.name_j4.setText(tab.game.j4.getName());
                                     }
                                     
                                     capital.setText("0");
@@ -146,6 +178,10 @@ public class Admin {
                                     frame_alterar.dispose();
                                     entrar.setEnabled(true);
                                     tab.verificaFalidos();
+                                    tab.updatePropriedade();
+                                    if(tab.game.turn.falencia){
+                                        tab.game.nextTurn();
+                                    }
                                 }
                             });
 

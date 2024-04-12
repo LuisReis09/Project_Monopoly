@@ -21,6 +21,7 @@ public class Tabuleiro implements Serializable{
     int[] ampliacoes = new int[q];
     JLabel[] title = new JLabel[q];  //titulo da casa
     JLabel[] subtitle = new JLabel[q];  //subtitulo da casa
+    JLabel[] indices = new JLabel[q]; //indice da casa
     JPanel pino_j1 = new JPanel();
     JPanel pino_j2 = new JPanel();
     JPanel pino_j3 = new JPanel();
@@ -49,39 +50,12 @@ public class Tabuleiro implements Serializable{
 
         for(int i=0; i<q; i++){
             casas[i]= new JPanel();
+            indices[i] = new JLabel();
             owner[i]= null;
             valor[i]= 0;
             ampliacoes[i]= 0;
         }
 
-    }
-
-    public int randomNumber(){
-        int number = (int) (Math.random()*6) + 1;
-        return number;
-    }
-
-    public void verificaFalidos(){
-        if(game.getCapital(game.j1) <= 0){
-            game.j1.falencia = true;
-            falido1.setText("FALIU");
-            pino_j1.setVisible(false);
-        }
-        if(game.getCapital(game.j2) <= 0){
-            game.j2.falencia = true;
-            falido2.setText("FALIU");
-            pino_j2.setVisible(false);
-        }
-        if(game.getCapital(game.j3) <= 0){
-            game.j3.falencia = true;
-            falido3.setText("FALIU");
-            pino_j3.setVisible(false);
-        }
-        if(game.getCapital(game.j4) <= 0){
-            game.j4.falencia = true;
-            falido4.setText("FALIU");
-            pino_j4.setVisible(false);
-        }
     }
 
     public JPanel getTabuleiro(){
@@ -98,6 +72,37 @@ public class Tabuleiro implements Serializable{
         repaintBackgrounds();
             
         return tab;
+    }
+
+    public void verificaFalidos(){
+        if(game.getCapital(game.j1) <= 0 || game.j1.falencia){
+            game.j1.falencia = true;
+            game.setCapital(0, game.j1);
+            falido1.setText("FALIU");
+            capital_j1.setText("Capital: 0.00");
+            pino_j1.setVisible(false);
+        }
+        if(game.getCapital(game.j2) <= 0 || game.j2.falencia){
+            game.j2.falencia = true;
+            game.setCapital(0, game.j2);
+            falido2.setText("FALIU");
+            capital_j2.setText("Capital: 0.00");
+            pino_j2.setVisible(false);
+        }
+        if(game.getCapital(game.j3) <= 0 || game.j3.falencia){
+            game.j3.falencia = true;
+            game.setCapital(0, game.j3);
+            falido3.setText("FALIU");
+            capital_j3.setText("Capital: 0.00");
+            pino_j3.setVisible(false);
+        }
+        if(game.getCapital(game.j4) <= 0 || game.j4.falencia){
+            game.j4.falencia = true;
+            game.setCapital(0, game.j4);
+            falido4.setText("FALIU");
+            capital_j4.setText("Capital: 0.00");
+            pino_j4.setVisible(false);
+        }
     }
 
     public void redefineBorders(){
@@ -265,26 +270,36 @@ public class Tabuleiro implements Serializable{
     public void updateCapital(Player player){
 
         if(player == game.j1){
-            capital_j1.setText("Capital: " + game.getCapital(game.j1));
+            String format = String.format("%.2f", game.getCapital(game.j1));
+            capital_j1.setText("Capital: " + format);
+            verificaFalidos();
+            updatePropriedade();
             return;
         }
         
         if(player == game.j2){
-            capital_j2.setText("Capital: " + game.getCapital(game.j2));
+            String format = String.format("%.2f", game.getCapital(game.j2));
+            capital_j2.setText("Capital: " + format);
+            verificaFalidos();
+            updatePropriedade();
             return;
         }
         
         if(player == game.j3){
-            capital_j3.setText("Capital: " + game.getCapital(game.j3));
+            String format = String.format("%.2f", game.getCapital(game.j3));
+            capital_j3.setText("Capital: " + format);
+            verificaFalidos();
+            updatePropriedade();
             return;
         }
         
         if(player == game.j4){
-            capital_j4.setText("Capital: " + game.getCapital(game.j4));
+            String format = String.format("%.2f", game.getCapital(game.j4));
+            capital_j4.setText("Capital: " + format);
+            verificaFalidos();
+            updatePropriedade();
             return;
         }
-
-        verificaFalidos();
     }
 
     public void preencheFuncoes(){
@@ -295,8 +310,11 @@ public class Tabuleiro implements Serializable{
         title[0].setBounds(50, 50, 55, 25);
         title[0].setHorizontalAlignment(SwingConstants.LEFT);
         title[0].setFont(new Font("Times New Roman", Font.BOLD, 15));
+        indices[0].setText("0");
+        indices[0].setBounds(90,5, 15, 10);
         casas[0].setLayout(null);
         casas[0].add(title[0]);
+        casas[0].add(indices[0]);
         casas[0].setBackground(Color.LIGHT_GRAY);
         casas[0].setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
@@ -306,11 +324,16 @@ public class Tabuleiro implements Serializable{
         subtitle[1].setText("Aluguel: " + valor[1]);
         title[1].setBounds(0, 45, 105, 15);
         subtitle[1].setBounds(0, 60, 105, 15);
+        title[1].setFont(titulos);
+        subtitle[1].setFont(titulos);
+        indices[1].setText("1");
+        indices[1].setBounds(90, 5, 15, 10);
         title[1].setHorizontalAlignment(SwingConstants.CENTER);
         subtitle[1].setHorizontalAlignment(SwingConstants.CENTER);
         casas[1].setLayout(null);
         casas[1].add(title[1]);
-        casas[1].add(subtitle[1]);
+        casas[1].add(subtitle[1]); 
+        casas[1].add(indices[1]);
         casas[1].setBackground(desocupada);
         casas[1].setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
@@ -322,11 +345,14 @@ public class Tabuleiro implements Serializable{
         subtitle[2].setBounds(0, 60, 105, 15);
         title[2].setFont(titulos);
         subtitle[2].setFont(titulos);
+        indices[2].setText("2");
+        indices[2].setBounds(90, 5, 15, 10);
         title[2].setHorizontalAlignment(SwingConstants.CENTER);
         subtitle[2].setHorizontalAlignment(SwingConstants.CENTER);
         casas[2].setLayout(null);
         casas[2].add(title[2]);
         casas[2].add(subtitle[2]);
+        casas[2].add(indices[2]);
         casas[2].setBackground(desocupada);
         casas[2].setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
@@ -334,8 +360,11 @@ public class Tabuleiro implements Serializable{
         title[3].setBounds(0, 45, 105, 15);
         title[3].setHorizontalAlignment(SwingConstants.CENTER);
         title[3].setFont(titulos);
+        indices[3].setText("3");
+        indices[3].setBounds(90, 5, 15, 10);
         casas[3].setLayout(null);
         casas[3].add(title[3]);
+        casas[3].add(indices[3]);
         casas[3].setBackground(desocupada);
         casas[3].setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
@@ -348,20 +377,26 @@ public class Tabuleiro implements Serializable{
         subtitle[4].setBounds(0, 60, 105, 15);
         title[4].setFont(titulos);
         subtitle[4].setFont(titulos);
+        indices[4].setText("4");
+        indices[4].setBounds(90, 5, 15, 10);
         title[4].setHorizontalAlignment(SwingConstants.CENTER);
         subtitle[4].setHorizontalAlignment(SwingConstants.CENTER);
         casas[4].setLayout(null);
         casas[4].add(title[4]);
         casas[4].add(subtitle[4]);
+        casas[4].add(indices[4]);
         casas[4].setBackground(desocupada);
         casas[4].setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
         title[5] = new JLabel("Redemoinho");
         title[5].setBounds(0, 45, 105, 15);
         title[5].setFont(titulos);
+        indices[5].setText("5");
+        indices[5].setBounds(90, 5, 15, 10);
         title[5].setHorizontalAlignment(SwingConstants.CENTER);
         casas[5].setLayout(null);
         casas[5].add(title[5]);
+        casas[5].add(indices[5]);
         casas[5].setBackground(desocupada);
         casas[5].setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
@@ -373,11 +408,14 @@ public class Tabuleiro implements Serializable{
         subtitle[6].setBounds(0, 60, 105, 15);
         title[6].setFont(titulos);
         subtitle[6].setFont(titulos);
+        indices[6].setText("6");
+        indices[6].setBounds(90, 5, 15, 10);
         title[6].setHorizontalAlignment(SwingConstants.CENTER);
         subtitle[6].setHorizontalAlignment(SwingConstants.CENTER);
         casas[6].setLayout(null);
         casas[6].add(title[6]);
         casas[6].add(subtitle[6]);
+        casas[6].add(indices[6]);
         casas[6].setBackground(desocupada);
         casas[6].setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
@@ -386,8 +424,11 @@ public class Tabuleiro implements Serializable{
         title[7].setBounds(0, 45, 105, 15);
         title[7].setHorizontalAlignment(SwingConstants.CENTER);
         title[7].setFont(titulos);
+        indices[7].setText("7");
+        indices[7].setBounds(90, 5, 15, 10);
         casas[7].setLayout(null);
         casas[7].add(title[7]);
+        casas[7].add(indices[7]);
         casas[7].setBackground(desocupada);
         casas[7].setBorder(BorderFactory.createLineBorder(Color.BLACK));
         
@@ -399,11 +440,14 @@ public class Tabuleiro implements Serializable{
         subtitle[8].setBounds(0, 60, 105, 15);
         title[8].setFont(titulos);
         subtitle[8].setFont(titulos);
+        indices[8].setText("8");
+        indices[8].setBounds(90, 5, 15, 10);
         title[8].setHorizontalAlignment(SwingConstants.CENTER);
         subtitle[8].setHorizontalAlignment(SwingConstants.CENTER);
         casas[8].setLayout(null);
         casas[8].add(title[8]);
         casas[8].add(subtitle[8]);
+        casas[8].add(indices[8]);
         casas[8].setBackground(desocupada);
         casas[8].setBorder(BorderFactory.createLineBorder(Color.BLACK));
         
@@ -415,11 +459,14 @@ public class Tabuleiro implements Serializable{
         subtitle[9].setBounds(0, 60, 105, 15);
         title[9].setFont(titulos);
         subtitle[9].setFont(titulos);
+        indices[9].setText("9");
+        indices[9].setBounds(90, 5, 15, 10);
         title[9].setHorizontalAlignment(SwingConstants.CENTER);
         subtitle[9].setHorizontalAlignment(SwingConstants.CENTER);
         casas[9].setLayout(null);
         casas[9].add(title[9]);
         casas[9].add(subtitle[9]);
+        casas[9].add(indices[9]);
         casas[9].setBackground(desocupada);
         casas[9].setBorder(BorderFactory.createLineBorder(Color.BLACK)); 
         
@@ -431,9 +478,12 @@ public class Tabuleiro implements Serializable{
         subtitle[10].setHorizontalAlignment(SwingConstants.CENTER);
         title[10].setFont(new Font("Times New Roman", Font.BOLD, 15));
         subtitle[10].setFont(titulos);
+        indices[10].setText("10");
+        indices[10].setBounds(90, 5, 15, 10);
         casas[10].setLayout(null);
         casas[10].add(subtitle[10]);
         casas[10].add(title[10]);
+        casas[10].add(indices[10]);
         casas[10].setBackground(Color.LIGHT_GRAY);
         casas[10].setBorder(BorderFactory.createLineBorder(Color.BLACK));
         
@@ -445,11 +495,14 @@ public class Tabuleiro implements Serializable{
         subtitle[11].setBounds(0, 60, 105, 15);
         title[11].setFont(titulos);
         subtitle[11].setFont(titulos);
+        indices[11].setText("11");
+        indices[11].setBounds(90, 5, 15, 10);
         title[11].setHorizontalAlignment(SwingConstants.CENTER);
         subtitle[11].setHorizontalAlignment(SwingConstants.CENTER);
         casas[11].setLayout(null);
         casas[11].add(title[11]);
         casas[11].add(subtitle[11]);
+        casas[11].add(indices[11]);
         casas[11].setBackground(desocupada);
         casas[11].setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
@@ -461,11 +514,14 @@ public class Tabuleiro implements Serializable{
         subtitle[12].setBounds(0, 60, 105, 15);
         title[12].setFont(titulos);
         subtitle[12].setFont(titulos);
+        indices[12].setText("12");
+        indices[12].setBounds(90, 5, 15, 10);
         title[12].setHorizontalAlignment(SwingConstants.CENTER);
         subtitle[12].setHorizontalAlignment(SwingConstants.CENTER);
         casas[12].setLayout(null);
         casas[12].add(title[12]);
         casas[12].add(subtitle[12]);
+        casas[12].add(indices[12]);
         casas[12].setBackground(desocupada);
         casas[12].setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
@@ -475,11 +531,14 @@ public class Tabuleiro implements Serializable{
         subtitle[13].setBounds(0, 60, 105, 15);
         title[13].setFont(titulos);
         subtitle[13].setFont(titulos);
+        indices[13].setText("13");
+        indices[13].setBounds(90, 5, 15, 10);
         title[13].setHorizontalAlignment(SwingConstants.CENTER);
         subtitle[13].setHorizontalAlignment(SwingConstants.CENTER);
         casas[13].setLayout(null);
         casas[13].add(title[13]);
         casas[13].add(subtitle[13]);
+        casas[13].add(indices[13]);
         casas[13].setBackground(desocupada);
         casas[13].setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
@@ -491,6 +550,9 @@ public class Tabuleiro implements Serializable{
         subtitle[14].setBounds(0, 60, 105, 15);
         title[14].setFont(titulos);
         subtitle[14].setFont(titulos);
+        indices[14].setText("14");
+        indices[14].setBounds(90, 5, 15, 10);
+        casas[14].add(indices[14]);
         title[14].setHorizontalAlignment(SwingConstants.CENTER);
         subtitle[14].setHorizontalAlignment(SwingConstants.CENTER);
         casas[14].setLayout(null);
@@ -507,6 +569,9 @@ public class Tabuleiro implements Serializable{
         subtitle[15].setBounds(0, 60, 105, 15);
         title[15].setFont(titulos);
         subtitle[15].setFont(titulos);
+        indices[15].setText("15");
+        indices[15].setBounds(90, 5, 15, 10);
+        casas[15].add(indices[15]);
         title[15].setHorizontalAlignment(SwingConstants.CENTER);
         subtitle[15].setHorizontalAlignment(SwingConstants.CENTER);
         casas[15].setLayout(null);
@@ -516,11 +581,15 @@ public class Tabuleiro implements Serializable{
         casas[15].setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
         title[16] = new JLabel("Imposto Geral");
-        subtitle[16] = new JLabel("Valor: $200");
+        valor[16] = (float) 250.00;
+        subtitle[16] = new JLabel("Valor: $" + valor[16]);
         title[16].setBounds(0, 45, 105, 15);
         subtitle[16].setBounds(0, 60, 105, 15);
         title[16].setFont(titulos);
         subtitle[16].setFont(titulos);
+        indices[16].setText("16");
+        indices[16].setBounds(90, 5, 15, 10);
+        casas[16].add(indices[16]);
         title[16].setHorizontalAlignment(SwingConstants.CENTER);
         subtitle[16].setHorizontalAlignment(SwingConstants.CENTER);
         casas[16].setLayout(null);
@@ -537,6 +606,9 @@ public class Tabuleiro implements Serializable{
         subtitle[17].setBounds(0, 60, 105, 15);
         title[17].setFont(titulos);
         subtitle[17].setFont(titulos);
+        indices[17].setText("17");
+        indices[17].setBounds(90, 5, 15, 10);
+        casas[17].add(indices[17]);
         title[17].setHorizontalAlignment(SwingConstants.CENTER);
         subtitle[17].setHorizontalAlignment(SwingConstants.CENTER);
         casas[17].setLayout(null);
@@ -553,6 +625,9 @@ public class Tabuleiro implements Serializable{
         subtitle[18].setBounds(0, 60, 105, 15);
         title[18].setFont(titulos);
         subtitle[18].setFont(titulos);
+        indices[18].setText("18");
+        indices[18].setBounds(90, 5, 15, 10);
+        casas[18].add(indices[18]);
         title[18].setHorizontalAlignment(SwingConstants.CENTER);
         subtitle[18].setHorizontalAlignment(SwingConstants.CENTER);
         casas[18].setLayout(null);
@@ -565,6 +640,9 @@ public class Tabuleiro implements Serializable{
         title[19].setBounds(0, 45, 105, 15);
         title[19].setHorizontalAlignment(SwingConstants.CENTER);
         title[19].setFont(new Font("Times New Roman", Font.BOLD, 15));
+        indices[19].setText("19");
+        indices[19].setBounds(90, 5, 15, 10);
+        casas[19].add(indices[19]);
         casas[19].setLayout(null);
         casas[19].add(title[19]);
         casas[19].setBackground(Color.LIGHT_GRAY);
@@ -578,6 +656,9 @@ public class Tabuleiro implements Serializable{
         subtitle[20].setBounds(0, 60, 105, 15);
         title[20].setFont(titulos);
         subtitle[20].setFont(titulos);
+        indices[20].setText("20");
+        indices[20].setBounds(90, 5, 15, 10);
+        casas[20].add(indices[20]);
         title[20].setHorizontalAlignment(SwingConstants.CENTER);
         subtitle[20].setHorizontalAlignment(SwingConstants.CENTER);
         casas[20].setLayout(null);
@@ -590,6 +671,9 @@ public class Tabuleiro implements Serializable{
         title[21].setBounds(0, 45, 105, 15);
         title[21].setHorizontalAlignment(SwingConstants.CENTER);
         title[21].setFont(titulos);
+        indices[21].setText("21");
+        indices[21].setBounds(90, 5, 15, 10);
+        casas[21].add(indices[21]);
         casas[21].setLayout(null);
         casas[21].add(title[21]);
         casas[21].setBackground(desocupada);
@@ -603,6 +687,9 @@ public class Tabuleiro implements Serializable{
         subtitle[22].setBounds(0, 60, 105, 15);
         title[22].setFont(titulos);
         subtitle[22].setFont(titulos);
+        indices[22].setText("22");
+        indices[22].setBounds(90, 5, 15, 10);
+        casas[22].add(indices[22]);
         title[22].setHorizontalAlignment(SwingConstants.CENTER);
         subtitle[22].setHorizontalAlignment(SwingConstants.CENTER);
         casas[22].setLayout(null);
@@ -615,18 +702,24 @@ public class Tabuleiro implements Serializable{
         title[23].setBounds(0, 45, 105, 15);
         title[23].setHorizontalAlignment(SwingConstants.CENTER);
         title[23].setFont(titulos);
+        indices[23].setText("23");
+        indices[23].setBounds(90, 5, 15, 10);
+        casas[23].add(indices[23]);
         casas[23].setLayout(null);
         casas[23].add(title[23]);
         casas[23].setBackground(desocupada);
         casas[23].setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
         title[24] = new JLabel("Pedágio");
-        valor[24]= (float) 250.00;
+        valor[24]= (float) 300.00;
         subtitle[24] = new JLabel("Valor: " + valor[24]);
         title[24].setBounds(0, 45, 105, 15);
         subtitle[24].setBounds(0, 60, 105, 15);
         title[24].setFont(titulos);
         subtitle[24].setFont(titulos);
+        indices[24].setText("24");
+        indices[24].setBounds(90, 5, 15, 10);
+        casas[24].add(indices[24]);
         title[24].setHorizontalAlignment(SwingConstants.CENTER);
         subtitle[24].setHorizontalAlignment(SwingConstants.CENTER);
         casas[24].setLayout(null);
@@ -642,6 +735,9 @@ public class Tabuleiro implements Serializable{
         subtitle[25].setBounds(0, 60, 105, 15);
         title[25].setFont(titulos);
         subtitle[25].setFont(titulos);
+        indices[25].setText("25");
+        indices[25].setBounds(90, 5, 15, 10);
+        casas[25].add(indices[25]);
         title[25].setHorizontalAlignment(SwingConstants.CENTER);
         subtitle[25].setHorizontalAlignment(SwingConstants.CENTER);
         casas[25].setLayout(null);
@@ -658,6 +754,9 @@ public class Tabuleiro implements Serializable{
         subtitle[26].setBounds(0, 60, 105, 15);
         title[26].setFont(titulos);
         subtitle[26].setFont(titulos);
+        indices[26].setText("26");
+        indices[26].setBounds(90, 5, 15, 10);
+        casas[26].add(indices[26]);
         title[26].setHorizontalAlignment(SwingConstants.CENTER);
         subtitle[26].setHorizontalAlignment(SwingConstants.CENTER);
         casas[26].setLayout(null);
@@ -674,6 +773,9 @@ public class Tabuleiro implements Serializable{
         subtitle[27].setBounds(0, 60, 105, 15);
         title[27].setFont(titulos);
         subtitle[27].setFont(titulos);
+        indices[27].setText("27");
+        indices[27].setBounds(90, 5, 15, 10);
+        casas[27].add(indices[27]);
         title[27].setHorizontalAlignment(SwingConstants.CENTER);
         subtitle[27].setHorizontalAlignment(SwingConstants.CENTER);
         casas[27].setLayout(null);
@@ -690,6 +792,9 @@ public class Tabuleiro implements Serializable{
         subtitle[28].setBounds(0, 60, 105, 15);
         title[28].setFont(titulos);
         subtitle[28].setFont(titulos);
+        indices[28].setText("28");
+        indices[28].setBounds(90, 5, 15, 10);
+        casas[28].add(indices[28]);
         title[28].setHorizontalAlignment(SwingConstants.CENTER);
         subtitle[28].setHorizontalAlignment(SwingConstants.CENTER);
         casas[28].setLayout(null);
@@ -702,6 +807,9 @@ public class Tabuleiro implements Serializable{
         title[29].setBounds(0, 45, 105, 15);
         title[29].setHorizontalAlignment(SwingConstants.CENTER);
         title[29].setFont(new Font("Times New Roman", Font.BOLD, 15));
+        indices[29].setText("29");
+        indices[29].setBounds(90, 5, 15, 10);
+        casas[29].add(indices[29]);
         casas[29].setLayout(null);
         casas[29].add(title[29]);
         casas[29].setBackground(Color.LIGHT_GRAY);
@@ -715,6 +823,9 @@ public class Tabuleiro implements Serializable{
         subtitle[30].setBounds(0, 60, 105, 15);
         title[30].setFont(titulos);
         subtitle[30].setFont(titulos);
+        indices[30].setText("30");
+        indices[30].setBounds(90, 5, 15, 10);
+        casas[30].add(indices[30]);
         title[30].setHorizontalAlignment(SwingConstants.CENTER);
         subtitle[30].setHorizontalAlignment(SwingConstants.CENTER);
         casas[30].setLayout(null);
@@ -727,6 +838,9 @@ public class Tabuleiro implements Serializable{
         title[31].setBounds(0, 45, 105, 15);
         title[31].setHorizontalAlignment(SwingConstants.CENTER);
         title[31].setFont(titulos);
+        indices[31].setText("31");
+        indices[31].setBounds(90, 5, 15, 10);
+        casas[31].add(indices[31]);
         casas[31].setLayout(null);
         casas[31].add(title[31]);
         casas[31].setBackground(desocupada);
@@ -740,6 +854,9 @@ public class Tabuleiro implements Serializable{
         subtitle[32].setBounds(0, 60, 105, 15);
         title[32].setFont(titulos);
         subtitle[32].setFont(titulos);
+        indices[32].setText("32");
+        indices[32].setBounds(90, 5, 15, 10);
+        casas[32].add(indices[32]);
         title[32].setHorizontalAlignment(SwingConstants.CENTER);
         subtitle[32].setHorizontalAlignment(SwingConstants.CENTER);
         casas[32].setLayout(null);
@@ -756,6 +873,9 @@ public class Tabuleiro implements Serializable{
         subtitle[33].setBounds(0, 60, 105, 15);
         title[33].setFont(titulos);
         subtitle[33].setFont(titulos);
+        indices[33].setText("33");
+        indices[33].setBounds(90, 5, 15, 10);
+        casas[33].add(indices[33]);
         title[33].setHorizontalAlignment(SwingConstants.CENTER);
         subtitle[33].setHorizontalAlignment(SwingConstants.CENTER);
         casas[33].setLayout(null);
@@ -772,6 +892,9 @@ public class Tabuleiro implements Serializable{
         subtitle[34].setBounds(0, 60, 105, 15);
         title[34].setFont(titulos);
         subtitle[34].setFont(titulos);
+        indices[34].setText("34");
+        indices[34].setBounds(90, 5, 15, 10);
+        casas[34].add(indices[34]);
         title[34].setHorizontalAlignment(SwingConstants.CENTER);
         subtitle[34].setHorizontalAlignment(SwingConstants.CENTER);
         casas[34].setLayout(null);
@@ -781,12 +904,15 @@ public class Tabuleiro implements Serializable{
         casas[34].setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
         title[35] = new JLabel("Imposto Geral");
-        valor[35] = (float) 400.00;
+        valor[35] = (float) 500.00;
         subtitle[35] = new JLabel("Valor: " + valor[35]);
         title[35].setBounds(0, 45, 105, 15);
         subtitle[35].setBounds(0, 60, 105, 15);
         title[35].setFont(titulos);
         subtitle[35].setFont(titulos);
+        indices[35].setText("35");
+        indices[35].setBounds(90, 5, 15, 10);
+        casas[35].add(indices[35]);
         title[35].setHorizontalAlignment(SwingConstants.CENTER);
         subtitle[35].setHorizontalAlignment(SwingConstants.CENTER);
         casas[35].setLayout(null);
@@ -803,6 +929,9 @@ public class Tabuleiro implements Serializable{
         subtitle[36].setBounds(0, 60, 105, 15);
         title[36].setFont(titulos);
         subtitle[36].setFont(titulos);
+        indices[36].setText("36");
+        indices[36].setBounds(90, 5, 15, 10);
+        casas[36].add(indices[36]);
         title[36].setHorizontalAlignment(SwingConstants.CENTER);
         subtitle[36].setHorizontalAlignment(SwingConstants.CENTER);
         casas[36].setLayout(null);
@@ -819,6 +948,9 @@ public class Tabuleiro implements Serializable{
         subtitle[37].setBounds(0, 60, 105, 15);
         title[37].setFont(titulos);
         subtitle[37].setFont(titulos);
+        indices[37].setText("37");
+        indices[37].setBounds(90, 5, 15, 10);
+        casas[37].add(indices[37]);
         title[37].setHorizontalAlignment(SwingConstants.CENTER);
         subtitle[37].setHorizontalAlignment(SwingConstants.CENTER);
         casas[37].setLayout(null);
@@ -849,8 +981,20 @@ public class Tabuleiro implements Serializable{
             if(player.posicao >= 38){
                player.posicao -= 38;
             }
+
+            if(player==game.j1){
+                pino_j1.setLocation(casas[player.posicao].getX()+5, casas[player.posicao].getY()+5);
+            }else if(player==game.j2){
+                pino_j2.setLocation(casas[player.posicao].getX()+25, casas[player.posicao].getY()+5);
+            }else if(player==game.j3){
+                pino_j3.setLocation(casas[player.posicao].getX()+5, casas[player.posicao].getY()+25);
+            }else if(player==game.j4){
+                pino_j4.setLocation(casas[player.posicao].getX()+25, casas[player.posicao].getY()+25);
+            }
+            return;
         }
 
+        player.posicao = n;
         int m = player.getPosition();
         int x= casas[m].getX();
         int y= casas[m].getY();
@@ -860,7 +1004,7 @@ public class Tabuleiro implements Serializable{
             pino_j2.setLocation(x+25, y+5);
         }else if(player==game.j3){
             pino_j3.setLocation(x+5, y+25);
-        }else{
+        }else if(player==game.j4){
             pino_j4.setLocation(x+25, y+25);
         }
 
@@ -883,50 +1027,51 @@ public class Tabuleiro implements Serializable{
 
     public void updateBanco(float valor){
         this.valor[10] += valor;
-        subtitle[10].setText("Valor: " + this.valor[10]);
+        String format = String.format("%.2f", this.valor[10]);
+        subtitle[10].setText("Valor: " + format);
     }
 
     public void updatePropriedade(){
-        int p, s;
+        int p;
 
         if(game.j1.getFalido()){
-            s = game.j1.propriedades.size();
-            for(int i=0; i<s; i++){
+            for(int i= 0; i<game.j1.propriedades.size(); i++){
                 p = game.j1.propriedades.get(i);
                 casas[p].setBackground(desocupada);
                 owner[p] = null;
-                game.j1.removePropriedade(game.j1.propriedades.get(p));
+                valor[p] = (float) 250;
             }
+            game.j1.propriedades.clear();
         }
 
         if(game.j2.getFalido()){
-            s = game.j2.propriedades.size();
-            for(int i=0; i<s; i++){
+            for(int i= 0; i<game.j2.propriedades.size(); i++){
                 p = game.j2.propriedades.get(i);
                 casas[p].setBackground(desocupada);
                 owner[p] = null;
-                game.j2.removePropriedade(game.j2.propriedades.get(p));
+                valor[p] = (float) 250;
             }
+            game.j2.propriedades.clear();
         }
 
         if(game.j3.getFalido()){
-            s = game.j3.propriedades.size();
-            for(int i=0; i<s; i++){
+            for(int i= 0; i<game.j3.propriedades.size(); i++){
                 p = game.j3.propriedades.get(i);
                 casas[p].setBackground(desocupada);
                 owner[p] = null;
-                game.j3.removePropriedade(game.j3.propriedades.get(p));
+                valor[p] = (float) 250;
             }
+            game.j3.propriedades.clear();
         }
 
         if(game.j4.getFalido()){
-            s = game.j4.propriedades.size();
-            for(int i=0; i<s; i++){
+            for(int i= 0; i<game.j4.propriedades.size(); i++){
                 p = game.j4.propriedades.get(i);
                 casas[p].setBackground(desocupada);
                 owner[p] = null;
-                game.j4.removePropriedade(game.j4.propriedades.get(p));
+                valor[p] = (float) 250;
             }
+            game.j4.propriedades.clear();
         }
     }	
 
@@ -936,6 +1081,11 @@ public class Tabuleiro implements Serializable{
                 casas[i].setBackground(owner[i].getColor());
             }
         }
+    }
+
+    public int randomNumber(){
+        int number = (int) (Math.random()*6) + 1;
+        return number;
     }
 
     public int randomSwirl(){
