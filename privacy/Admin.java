@@ -143,7 +143,7 @@ public class Admin{
                                         tab.attPosition(tab.game.j1, tab.game.j1.getPosition());
                                         tab.updateCapital(tab.game.j1);
                                         tab.game.j1.setName(name.getText());
-                                        tab.name_j1.setText(tab.game.j1.getName());
+                                        tab.cards.name_j1.setText(tab.game.j1.getName());
 
                                     }else if(player.equals(tab.game.j2.getName())){
                                         tab.game.setCapital(Float.parseFloat(capital.getText()), tab.game.j2);
@@ -151,7 +151,7 @@ public class Admin{
                                         tab.attPosition(tab.game.j2, tab.game.j2.getPosition());
                                         tab.updateCapital(tab.game.j2);
                                         tab.game.j2.setName(name.getText());
-                                        tab.name_j2.setText(tab.game.j2.getName());
+                                        tab.cards.name_j2.setText(tab.game.j2.getName());
 
                                     }else if(player.equals(tab.game.j3.getName())){
                                         tab.game.setCapital(Float.parseFloat(capital.getText()), tab.game.j3);
@@ -159,7 +159,7 @@ public class Admin{
                                         tab.attPosition(tab.game.j3, tab.game.j3.getPosition());
                                         tab.updateCapital(tab.game.j3);
                                         tab.game.j3.setName(name.getText());
-                                        tab.name_j3.setText(tab.game.j3.getName());
+                                        tab.cards.name_j3.setText(tab.game.j3.getName());
 
                                     }else if(player.equals(tab.game.j4.getName())){
                                         tab.game.setCapital(Float.parseFloat(capital.getText()), tab.game.j4);
@@ -167,7 +167,7 @@ public class Admin{
                                         tab.attPosition(tab.game.j4, tab.game.j4.getPosition());
                                         tab.updateCapital(tab.game.j4);
                                         tab.game.j4.setName(name.getText());
-                                        tab.name_j4.setText(tab.game.j4.getName());
+                                        tab.cards.name_j4.setText(tab.game.j4.getName());
                                     }
                                     
                                     capital.setText("0");

@@ -2,14 +2,11 @@ package tabuleiro;
 import objects.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.Serializable;
 
 import javax.swing.*;
-//import java.awt.event.*;
 
-public class Nav implements Serializable{
-    private static final long serialVersionUID = 4;
-    Tabuleiro tab = new Tabuleiro(null);
+public class Nav{
+    Tabuleiro tab;
     JLabel vez = new JLabel();
     JButton rolardado = new JButton("Rolar o Dado");
     JPanel rodada = new JPanel();
@@ -45,8 +42,8 @@ public class Nav implements Serializable{
                 }
                 showRodada(tab.game.getTurn(), tab.game.getTurn().getPosition(), tab.game.getTurn().getPreso());
 
-                tab.redefineBorders();
                 tab.verificaFalidos();
+                tab.pinos.layoutPinos(); //recarrega os pinos, para diminuir o bug visual de repintar a casa
                 tab.updatePropriedade();
                 tab.game.nextTurn();
                 updateTurn();
@@ -60,6 +57,10 @@ public class Nav implements Serializable{
     }
     
     public void updateTurn(){
+        vez.setText("Próximo: " + tab.game.turn.getName());
+    }
+
+    public void attTurn(){
         vez.setText("Próximo: " + tab.game.turn.getName());
     }
     
@@ -163,7 +164,7 @@ public class Nav implements Serializable{
         if(p==16||p==35){
             String text = player_name + " sorteou o número: " + random + ".\n\n";
             text += player_name + " parou no Imposto Geral";
-            text += "\nTodos os jogadores perderão $" + tab.valor[p];
+            text += "\nTodos os jogadores perderão $" + tab.casas.valor[p];
 
             yes.setEnabled(true);
             yes.setText("Cobrar Imposto Geral");
@@ -172,37 +173,37 @@ public class Nav implements Serializable{
                 public void actionPerformed(ActionEvent e){
                     yes.setEnabled(false);
                     String text2 = "";
-                    if(tab.game.getCapital(tab.game.j1)>tab.valor[p]){
-                        tab.game.dimCapital(tab.valor[p], tab.game.j1);
+                    if(tab.game.getCapital(tab.game.j1)>tab.casas.valor[p]){
+                        tab.game.dimCapital(tab.casas.valor[p], tab.game.j1);
                         tab.updateCapital(tab.game.j1);
-                        tab.updateBanco(tab.valor[p]);
+                        tab.updateBanco(tab.casas.valor[p]);
                     }else{
                         tab.game.j1.falencia = true;
                     }
-                    if(tab.game.getCapital(tab.game.j2)>tab.valor[p]){
-                        tab.game.dimCapital(tab.valor[p], tab.game.j2);
+                    if(tab.game.getCapital(tab.game.j2)>tab.casas.valor[p]){
+                        tab.game.dimCapital(tab.casas.valor[p], tab.game.j2);
                         tab.updateCapital(tab.game.j2);
-                        tab.updateBanco(tab.valor[p]);
+                        tab.updateBanco(tab.casas.valor[p]);
                     }else{
                         tab.game.j2.falencia = true;
                     }
-                    if(tab.game.getCapital(tab.game.j3)>tab.valor[p]){
-                        tab.game.dimCapital(tab.valor[p], tab.game.j3);
+                    if(tab.game.getCapital(tab.game.j3)>tab.casas.valor[p]){
+                        tab.game.dimCapital(tab.casas.valor[p], tab.game.j3);
                         tab.updateCapital(tab.game.j3);
-                        tab.updateBanco(tab.valor[p]);
+                        tab.updateBanco(tab.casas.valor[p]);
                     }else{
                         tab.game.j3.falencia = true;
                     }
-                    if(tab.game.getCapital(tab.game.j4)>tab.valor[p]){
-                        tab.game.dimCapital(tab.valor[p], tab.game.j4);
+                    if(tab.game.getCapital(tab.game.j4)>tab.casas.valor[p]){
+                        tab.game.dimCapital(tab.casas.valor[p], tab.game.j4);
                         tab.updateCapital(tab.game.j4);
-                        tab.updateBanco(tab.valor[p]);
+                        tab.updateBanco(tab.casas.valor[p]);
                     }else{
                         tab.game.j4.falencia = true;
                     }
         
-                    text2 += "\nTodos perderam $" + tab.valor[p];
-                    text2 += "\nNovo Valor do Banco: " + tab.valor[10];
+                    text2 += "\nTodos perderam $" + tab.casas.valor[p];
+                    text2 += "\nNovo Valor do Banco: " + tab.casas.valor[10];
                     text2 += "\nContinue Jogando!";
                     show.setText(text2);
                     rolardado.setEnabled(true);
@@ -241,7 +242,7 @@ public class Nav implements Serializable{
                         text2 += player_name + " perdeu 5% de seu capital";
                         tab.updateBanco(0.05f*cpt);
                         text2 += "\nAh, não! Mais sorte na próxima!";
-                        text2 += "\nNovo valor do banco: " + tab.valor[10];
+                        text2 += "\nNovo valor do banco: " + tab.casas.valor[10];
                     }
                     tab.updateCapital(player);
                     text2 += "\nNovo Capital: " + tab.game.getCapital(player);
@@ -270,13 +271,13 @@ public class Nav implements Serializable{
 
             yes.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e){
-                    tab.game.addCapital(tab.valor[10], player);
+                    tab.game.addCapital(tab.casas.valor[10], player);
                     tab.updateCapital(player);
                     String text2 = "";
-                    text2 += player_name + " coletou $" + tab.valor[10];
+                    text2 += player_name + " coletou $" + tab.casas.valor[10];
                     text2 += "\nNovo Capital: $" + tab.game.getCapital(player);
                     text2 += "\nContinue jogando!";
-                    tab.valor[10] = 0f;
+                    tab.casas.valor[10] = 0f;
                     tab.updateBanco(0);
                     show.setText(text2);
                     rolardado.setEnabled(true);
@@ -296,7 +297,7 @@ public class Nav implements Serializable{
             tab.updateCapital(player);
             tab.updateBanco(value);
             text += "\nCapital: " + tab.game.getCapital(player);
-            text += "\nNovo Valor do Banco: " + tab.valor[10];
+            text += "\nNovo Valor do Banco: " + tab.casas.valor[10];
             text += "\nContinue Jogando!" + p;
             show.setText(text);
             return;
@@ -374,13 +375,13 @@ public class Nav implements Serializable{
         if(p==24){
             String text = player_name + " sorteou o número: " + random + ".\n\n";
             text += player_name + " parou no Pedágio";
-            text += "\n" + player_name + " pagará $300 para continuar";
-            if(tab.game.getCapital(player)>300){
-                tab.game.dimCapital(300, player);
+            text += "\n" + player_name + " pagará $500 para continuar";
+            if(tab.game.getCapital(player)>500){
+                tab.game.dimCapital(500, player);
                 tab.updateCapital(player);
-                tab.updateBanco(300);
+                tab.updateBanco(500);
                 text += "\nCapital: " + tab.game.getCapital(player);
-                text += "\nNovo valor do Banco: " + tab.valor[10];
+                text += "\nNovo valor do Banco: " + tab.casas.valor[10];
                 text += "\nContinue jogando!";
             }else{
                 text += "Jogador faliu!";
@@ -468,8 +469,8 @@ public class Nav implements Serializable{
                 public void actionPerformed(ActionEvent e){
                     yes.setEnabled(false);
                     for(int i= 0; i<38; i++){
-                        if(tab.title[i].getText()=="Propriedade"&&tab.owner[i]==null){
-                            tab.casas[i].setBackground(player.getColor());
+                        if(tab.casas.title[i].getText()=="Propriedade"&&tab.owner[i]==null){
+                            tab.paineisCasa[i].setBackground(player.getColor());
                             tab.owner[i] = player;
                             player.addPropriedade(i);
                             String text2 = "";
@@ -491,7 +492,7 @@ public class Nav implements Serializable{
                     
                     int x = p.randomPropriedade();
                     p.removePropriedade(x);
-                    tab.casas[x].setBackground(player.getColor());
+                    tab.paineisCasa[x].setBackground(player.getColor());
                     tab.owner[x] = player;
                     player.addPropriedade(x);
                     String text2 = "";
@@ -540,7 +541,7 @@ public class Nav implements Serializable{
                     
                     int x = p.randomPropriedade();
                     p.removePropriedade(x);
-                    tab.casas[x].setBackground(player.getColor());
+                    tab.paineisCasa[x].setBackground(player.getColor());
                     tab.owner[x] = player;
                     player.addPropriedade(x);
                     text2 += player_name + " tomou a propriedade " + x + " de " + p.getName();
@@ -571,7 +572,7 @@ public class Nav implements Serializable{
             tab.game.dimCapital(tab.game.getCapital(player)*0.05f, player);
             tab.updateCapital(player);
             text += "\nNovo Capital: " + tab.game.getCapital(player);
-            text += "\nNovo Valor do Banco: " + tab.valor[10];
+            text += "\nNovo Valor do Banco: " + tab.casas.valor[10];
             text += "\nContinue jogando!";
             show.setText(text);      
             return;      
@@ -586,8 +587,8 @@ public class Nav implements Serializable{
             if(tab.owner[p]==null||tab.owner[p].falencia){
                 text += player_name + " caiu em uma propriedade vazia\n";
 
-                if(tab.game.getCapital(player)>tab.valor[p] && player == tab.game.getTurn()){
-                    text += "Deseja comprar a propriedade por " + tab.valor[p] + "?\n";
+                if(tab.game.getCapital(player)>tab.casas.valor[p] && player == tab.game.getTurn()){
+                    text += "Deseja comprar a propriedade por " + tab.casas.valor[p] + "?\n";
                     yes.setEnabled(true);
                     no.setEnabled(true);
                     yes.setText("Comprar");
@@ -599,8 +600,8 @@ public class Nav implements Serializable{
                             no.setEnabled(false);
                             String text2 = "";
                             text2 += player_name + " comprou a propriedade.";
-                            tab.casas[p].setBackground(player.getColor());
-                            tab.game.dimCapital(tab.valor[p], player);
+                            tab.paineisCasa[p].setBackground(player.getColor());
+                            tab.game.dimCapital(tab.casas.valor[p], player);
                             tab.updateCapital(player);
                             tab.owner[p] = player;
                             text2 += "\nCapital: " + tab.game.getCapital(player);
@@ -638,7 +639,7 @@ public class Nav implements Serializable{
             //Segundo Caso: O proprietario eh o jogador
             if(tab.owner[p]==player){
                 text += player_name + " parou em sua própria propriedade";
-                float custo_ampliar = tab.valor[p]*2;
+                float custo_ampliar = tab.casas.valor[p]*2;
                 if(tab.game.getCapital(player)>custo_ampliar&&tab.ampliacoes[p]<5){
                     rolardado.setEnabled(false);
                     text += "\nDeseja ampliar a propriedade por $" + custo_ampliar + " ?";
@@ -653,10 +654,10 @@ public class Nav implements Serializable{
                             String text2 = "";
                             tab.game.dimCapital(custo_ampliar, player);
                             tab.updateCapital(player);
-                            tab.valor[p] = custo_ampliar;
-                            tab.subtitle[p].setText("Aluguel: " + tab.valor[p]);
+                            tab.casas.valor[p] = custo_ampliar;
+                            tab.casas.subtitle[p].setText("Aluguel: " + tab.casas.valor[p]);
                             text2 += player_name + " ampliou a propriedade";
-                            text2 += "\nNovo Custo: " + tab.valor[p];
+                            text2 += "\nNovo Custo: " + tab.casas.valor[p];
                             text2 += "\nCapital: " + tab.game.getCapital(player);
                             text2 += "Continue jogando!";
                             tab.ampliacoes[p]++;
@@ -673,7 +674,7 @@ public class Nav implements Serializable{
                             no.setEnabled(false);
                             String text2 = "";
                             text2 += player_name + " não ampliou sua propriedade";
-                            text2 += "\nCusto: " + tab.valor[p];
+                            text2 += "\nCusto: " + tab.casas.valor[p];
                             text2 += "\nCapital: " + tab.game.getCapital(player);
                             text2 += "\nContinue jogando!";
 
@@ -697,7 +698,7 @@ public class Nav implements Serializable{
                 text += player_name + " parou na propriedade de " + tab.owner[p].getName();
 
                 //Condicao 1: Poder tomar a casa
-                float custo_tomar = tab.valor[p] * 3;
+                float custo_tomar = tab.casas.valor[p] * 3;
                 if(tab.game.getCapital(player) > custo_tomar){
                     rolardado.setEnabled(false);
                     text += "\n" + player_name + " possui capital suficiente para tomar a casa\n";
@@ -714,7 +715,7 @@ public class Nav implements Serializable{
                             tab.game.addCapital(custo_tomar, tab.owner[p]);
                             tab.updateCapital(player);
                             tab.updateCapital(tab.owner[p]);
-                            tab.casas[p].setBackground(player.getColor());
+                            tab.paineisCasa[p].setBackground(player.getColor());
                             String text2 = "";
                             text2 += "\n" + player_name + " tomou a propriedade de " + tab.owner[p].getName();
                             text2 += "\n" + tab.owner[p].getName() + " recebeu $" + custo_tomar + " e perdeu a propriedade.";
@@ -736,11 +737,11 @@ public class Nav implements Serializable{
                             no.setEnabled(false);
                             String text2 = "";
                             text2 += "\n" + player_name + " não comprou a propriedade de " + tab.owner[p].getName();
-                            tab.game.dimCapital(tab.valor[p], player);
-                            tab.game.addCapital(tab.valor[p], tab.owner[p]);
+                            tab.game.dimCapital(tab.casas.valor[p], player);
+                            tab.game.addCapital(tab.casas.valor[p], tab.owner[p]);
                             tab.updateCapital(player);
                             tab.updateCapital(tab.owner[p]);
-                            text2 += "\nValor do Aluguel: $" + tab.valor[p];
+                            text2 += "\nValor do Aluguel: $" + tab.casas.valor[p];
                             text2 += "\n" + player_name + " pagou aluguel a " + tab.owner[p].getName();
                             text2 += "\nCapital: $" + tab.game.getCapital(player);
                             text2 += "\nContinue Jogando!";
@@ -751,13 +752,13 @@ public class Nav implements Serializable{
                         }
                     });
 
-                }else if(tab.game.getCapital(player) > tab.valor[p]){
+                }else if(tab.game.getCapital(player) > tab.casas.valor[p]){
                     text += "\nNão há capital suficiente para tomar a casa.";
-                    tab.game.dimCapital(tab.valor[p], player);
-                    tab.game.addCapital(tab.valor[p], tab.owner[p]);
+                    tab.game.dimCapital(tab.casas.valor[p], player);
+                    tab.game.addCapital(tab.casas.valor[p], tab.owner[p]);
                     tab.updateCapital(player);
                     tab.updateCapital(tab.owner[p]);
-                    text += "\nValor do Aluguel: $" + tab.valor[p];
+                    text += "\nValor do Aluguel: $" + tab.casas.valor[p];
                     text += "\n" + player_name + " pagou aluguel a " + tab.owner[p].getName();
                     text += "\nCapital: $" + tab.game.getCapital(tab.owner[p]);
                     text += "\nContinue Jogando!";
@@ -769,8 +770,8 @@ public class Nav implements Serializable{
                     text += "\n" + player_name + " terá de ceder uma propriedade para quitar o aluguel.";
                     int x = player.randomPropriedade();
                     player.removePropriedade(x);
-                    tab.casas[x].setBackground(tab.owner[p].getColor());
-                    tab.valor[x] = (float) 250;
+                    tab.paineisCasa[x].setBackground(tab.owner[p].getColor());
+                    tab.casas.valor[x] = (float) 250;
                     tab.ampliacoes[x] = 0;
                     text += "\n" + player_name + " perdeu a propriedade da casa " + x;
                     text += "\n" + tab.owner[p].getName() + " agora é proprietário da casa " + x;

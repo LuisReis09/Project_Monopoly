@@ -2,7 +2,7 @@ package objects;
 import java.io.Serializable;
 
 public class Jogo implements Serializable{
-    private static final long serialVersionUID = 1;
+    private static final long serialVersionUID = 8;
     
     public Player j1 = new Player();
     public Player j2 = new Player();
@@ -20,14 +20,14 @@ public class Jogo implements Serializable{
         j4.setName("Player4");
 
         j1.setColor(238, 245, 54);
-        j2.setColor(59, 245, 59);
+        j2.setColor(95, 245, 95);
         j3.setColor(62, 212, 250);
         j4.setColor(250, 127, 148);
 
-        j1.capital = (float) 6000;
-        j2.capital = (float) 6000;
-        j3.capital = (float) 6000;
-        j4.capital = (float) 6000;
+        j1.capital = (float) 5000;
+        j2.capital = (float) 5000;
+        j3.capital = (float) 5000;
+        j4.capital = (float) 5000;
     }
 
     public String Str_Players(){

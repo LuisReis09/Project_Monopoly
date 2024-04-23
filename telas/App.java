@@ -1,24 +1,23 @@
+package telas;
+import util.Saves;
+import tabuleiro.*;
 import javax.swing.*;
-//import javax.swing.border.Border;
+
+import privacy.Admin;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Scanner;
-import util.*;
-import privacy.Admin;
-import tabuleiro.Pinos;
 
-public class Main{
+public class App {
     Saves save;
     Pinos pinos = new Pinos();
-    static Main obj = new Main();
 
-    
-    public static void main(String[] args){
-        obj.runInicio();   
-    }
-    
     public void runInicio(){
         //define a tela 1
         JFrame janela = new JFrame("Monopoly");
