@@ -33,16 +33,24 @@ public class Admin{
                 frame.setBackground(Color.BLACK);
                 
                 JLabel login_label = new JLabel("Login:");
-                login_label.setBounds(100, 50, 50, 30);
+                login_label.setBounds(100, 65, 50, 30);
 
                 JTextField login_field = new JTextField();
-                login_field.setBounds(150, 50, 200, 30);
+                login_field.setBounds(150, 65, 200, 30);
 
                 JLabel senha_label = new JLabel("Senha:");
-                senha_label.setBounds(100, 100, 50, 30);
+                senha_label.setBounds(100, 115, 50, 30);
                 
                 JPasswordField senha_field = new JPasswordField();
-                senha_field.setBounds(150, 100, 200, 30);
+                senha_field.setBounds(150, 115, 200, 30);
+
+                JLabel warning1 = new JLabel("ACESSO RESTRITO!");
+                warning1.setBounds(100, 15, 300, 20);
+                warning1.setHorizontalAlignment(SwingConstants.CENTER);
+                warning1.setFont(new Font("Arial", Font.BOLD, 20));
+                JLabel warning2 = new JLabel("Pressione enter ao terminar de digitar a senha");
+                warning2.setBounds(100, 170, 300, 20);
+                warning2.setHorizontalAlignment(SwingConstants.CENTER);
 
                 login_field.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "nextfield");
                 login_field.getActionMap().put("nextfield", new AbstractAction(){
@@ -53,17 +61,31 @@ public class Admin{
                 senha_field.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "nextfield");
                 senha_field.getActionMap().put("nextfield", new AbstractAction(){
                     public void actionPerformed(ActionEvent e){
-                        entrar.doClick();
+                        final String login_digitado = new String(login_field.getText());
+                        final String senha_digitada = new String(senha_field.getPassword());
+                        System.out.println("Login: " + login_digitado + "\n" + "Senha: " +  senha_digitada);
+                        if(login_digitado.equals(login)&&senha_digitada.equals(senha)){
+                            entrar.setEnabled(true);
+                            entrar.doClick();
+                        }else{
+                            JOptionPane.showMessageDialog(null, "Login e/ou senha incorretos!", "Erro", JOptionPane.ERROR_MESSAGE);
+                            login_field.setText("");
+                            senha_field.setText("");
+                        }
                     }
                 });
                 
                 entrar.setBounds(200, 150, 100, 30);
+                entrar.setEnabled(false);
+                entrar.setVisible(false);
+
+                for(ActionListener a : entrar.getActionListeners()){
+                    entrar.removeActionListener(a);
+                }
+                
                 
                 entrar.addActionListener(new ActionListener(){
                     public void actionPerformed(ActionEvent e){
-                        String senha_digitada = new String(senha_field.getPassword());
-                        //System.out.println("Login: " + login_field.getText() + "\n" + "Senha: " +  senha_digitada);
-                        if(login_field.getText().equals(login) && senha_digitada.equals(senha)){
                             entrar.setEnabled(false);
                             frame.dispose();
                             frame_alterar.setSize(500, 400);
@@ -198,10 +220,7 @@ public class Admin{
                             frame_alterar.revalidate();
                             frame_alterar.repaint();
                             
-                        }else{
-                            JOptionPane.showMessageDialog(null, "Login ou senha incorretos!", "Erro", JOptionPane.ERROR_MESSAGE);
                         
-                        }
                     }
                 });
                 
@@ -210,6 +229,8 @@ public class Admin{
                 frame.add(senha_label);
                 frame.add(senha_field);
                 frame.add(entrar);
+                frame.add(warning1);
+                frame.add(warning2);
                 frame.repaint();
             }
         });

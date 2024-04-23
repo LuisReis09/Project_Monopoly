@@ -1,6 +1,4 @@
 import javax.swing.*;
-//import javax.swing.border.Border;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -11,7 +9,7 @@ import tabuleiro.Pinos;
 
 public class Main{
     Saves save;
-    Pinos pinos = new Pinos();
+    //Pinos pinos = new Pinos();
     static Main obj = new Main();
 
     
@@ -74,18 +72,21 @@ public class Main{
         txt_j1.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "nextfield");
         txt_j1.getActionMap().put("nextfield", new AbstractAction(){
             public void actionPerformed(ActionEvent e){
+                txt_j2.setText("");
                 txt_j2.requestFocus();
             }
         });
         txt_j2.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "nextfield");
         txt_j2.getActionMap().put("nextfield", new AbstractAction(){
             public void actionPerformed(ActionEvent e){
+                txt_j3.setText("");
                 txt_j3.requestFocus();
             }
         });
         txt_j3.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "nextfield");
         txt_j3.getActionMap().put("nextfield", new AbstractAction(){
             public void actionPerformed(ActionEvent e){
+                txt_j4.setText("");
                 txt_j4.requestFocus();
             }
         });
@@ -98,17 +99,19 @@ public class Main{
 
         start_new_game.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
-                save = new Saves();
-                save.tab.setPinos(pinos);
-                pinos.update(save);
+                if(txt_j1.getText().equals("")||txt_j2.getText().equals("")||txt_j3.getText().equals("")||txt_j4.getText().equals("")){
+                    JOptionPane.showMessageDialog(janela, "Por favor, insira o nome de todos os jogadores.");
+                }else{
+                    save = new Saves();
 
-                save.game.j1.setName(txt_j1.getText());
-                save.game.j2.setName(txt_j2.getText());
-                save.game.j3.setName(txt_j3.getText());
-                save.game.j4.setName(txt_j4.getText());
-    
-                janela.dispose();
-                runApresentacaoJogo();
+                    save.game.j1.setName(txt_j1.getText());
+                    save.game.j2.setName(txt_j2.getText());
+                    save.game.j3.setName(txt_j3.getText());
+                    save.game.j4.setName(txt_j4.getText());
+        
+                    janela.dispose();
+                    runApresentacaoJogo();
+                }
             }
         });
 
@@ -119,8 +122,6 @@ public class Main{
                     ObjectInputStream ois = new ObjectInputStream(fis);
                     save = (Saves) ois.readObject();
                     save.initTab();
-                    save.tab.setPinos(pinos);
-                    pinos.update(save);
                     save.tab.reloadPositions();
                     fis.close();
                     ois.close();

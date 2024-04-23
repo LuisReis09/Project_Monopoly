@@ -280,7 +280,7 @@ public class Casas implements Serializable{
         casas[12].setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
         title[13] = new JLabel("Imposto de Renda");
-        subtitle[13] = new JLabel("Valor: 10%");
+        subtitle[13] = new JLabel("Valor: 15%");
         title[13].setBounds(0, 45, 105, 15);
         subtitle[13].setBounds(0, 60, 105, 15);
         title[13].setFont(titulos);
@@ -641,7 +641,7 @@ public class Casas implements Serializable{
         title[34] = new JLabel("Imposto Veicular");
         subtitle[34] = new JLabel();
         valor[34]= (float) 400.00;
-        subtitle[34].setText("Valor: 5%");
+        subtitle[34].setText("Valor: 10%");
         title[34].setBounds(0, 45, 105, 15);
         subtitle[34].setBounds(0, 60, 105, 15);
         title[34].setFont(titulos);

@@ -82,17 +82,20 @@ public class Nav{
         yes.setEnabled(false);
         no.setEnabled(false);
         if(yes.getActionListeners().length > 0)
-        yes.removeActionListener(yes.getActionListeners()[0]);
+            yes.removeActionListener(yes.getActionListeners()[0]);
         
         if(no.getActionListeners().length > 0)
-        no.removeActionListener(no.getActionListeners()[0]);
+            no.removeActionListener(no.getActionListeners()[0]);
         
         tab.game.quantFalidos();
         if(tab.game.qfalidos == 3){
             String text = "Fim de Jogo!\n";
             text += "O jogador " + tab.game.procuraNaoFalido().getName() + " venceu!";
+            text += "\nParabéns!";
+            text += "\nObrigado por Jogar Monopoly!";
             show.setFont(new Font(null, Font.BOLD, 20));
             show.setText(text);
+            JOptionPane.showMessageDialog(null, text, "Fim de Jogo", JOptionPane.WARNING_MESSAGE);
 
             yes.setEnabled(true);
             yes.setText("Fim de Jogo");
@@ -291,14 +294,15 @@ public class Nav{
 
         if(p==13){
             String text = player_name + " sorteou o número: " + random + ".\n\n";
-            text += player_name + " caiu na casa de imposto de renda, perdeu 10% do seu capital.";
-            float value = tab.game.getCapital(player)*0.1f;
+            text += player_name + " caiu na casa de imposto de renda, perdeu 15% do seu capital.";
+            text += "\nAntigo Capital: " + tab.game.getCapital(player);
+            float value = tab.game.getCapital(player)*0.15f;
             tab.game.dimCapital(value, player);
             tab.updateCapital(player);
             tab.updateBanco(value);
-            text += "\nCapital: " + tab.game.getCapital(player);
+            text += "\nNovo Capital: " + tab.game.getCapital(player);
             text += "\nNovo Valor do Banco: " + tab.casas.valor[10];
-            text += "\nContinue Jogando!" + p;
+            text += "\nContinue Jogando!";
             show.setText(text);
             return;
         }
@@ -567,9 +571,9 @@ public class Nav{
         if(p==34){
             String text = player_name + " sorteou o número: " + random + ".\n\n";
             text += player_name + " parou na casa de Imposto Veicular";
-            text += "\n" + player_name + " pagou 5% de imposto sobre o Capital";
-            tab.updateBanco(0.05f*tab.game.getCapital(player));
-            tab.game.dimCapital(tab.game.getCapital(player)*0.05f, player);
+            text += "\n" + player_name + " pagou 10% de imposto sobre o Capital";
+            tab.updateBanco(0.1f*tab.game.getCapital(player));
+            tab.game.dimCapital(tab.game.getCapital(player)*0.1f, player);
             tab.updateCapital(player);
             text += "\nNovo Capital: " + tab.game.getCapital(player);
             text += "\nNovo Valor do Banco: " + tab.casas.valor[10];
