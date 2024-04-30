@@ -6,6 +6,14 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class Nav{
+    /*  Essa classe eh responsavel por mostrar as informacoes da rodada atual do jogo
+        Ela mostra as informacoes da casa que o jogador caiu
+        E tambem mostra as opcoes que o jogador tem
+        Ela eh responsavel por causar as consequencias das casas
+        E tambem por atualizar o turno do jogo
+        Ou seja, ela eh a parte funcional de como o tabuleiro deve funcionar
+        Portanto, ela manipula, principalmente, todas as outras classes atraves do objeto Tabuleiro
+    */
     Tabuleiro tab;
     JLabel vez = new JLabel();
     JButton rolardado = new JButton("Rolar o Dado");
@@ -57,10 +65,6 @@ public class Nav{
     }
     
     public void updateTurn(){
-        vez.setText("Próximo: " + tab.game.turn.getName());
-    }
-
-    public void attTurn(){
         vez.setText("Próximo: " + tab.game.turn.getName());
     }
     
@@ -167,7 +171,7 @@ public class Nav{
         if(p==16||p==35){
             String text = player_name + " sorteou o número: " + random + ".\n\n";
             text += player_name + " parou no Imposto Geral";
-            text += "\nTodos os jogadores perderão $" + tab.casas.valor[p];
+            text += "\nTodos os jogadores perderão $" + tab.game.valor[p];
 
             yes.setEnabled(true);
             yes.setText("Cobrar Imposto Geral");
@@ -176,37 +180,37 @@ public class Nav{
                 public void actionPerformed(ActionEvent e){
                     yes.setEnabled(false);
                     String text2 = "";
-                    if(tab.game.getCapital(tab.game.j1)>tab.casas.valor[p]){
-                        tab.game.dimCapital(tab.casas.valor[p], tab.game.j1);
+                    if(tab.game.getCapital(tab.game.j1)>tab.game.valor[p]){
+                        tab.game.dimCapital(tab.game.valor[p], tab.game.j1);
                         tab.updateCapital(tab.game.j1);
-                        tab.updateBanco(tab.casas.valor[p]);
+                        tab.updateBanco(tab.game.valor[p]);
                     }else{
                         tab.game.j1.falencia = true;
                     }
-                    if(tab.game.getCapital(tab.game.j2)>tab.casas.valor[p]){
-                        tab.game.dimCapital(tab.casas.valor[p], tab.game.j2);
+                    if(tab.game.getCapital(tab.game.j2)>tab.game.valor[p]){
+                        tab.game.dimCapital(tab.game.valor[p], tab.game.j2);
                         tab.updateCapital(tab.game.j2);
-                        tab.updateBanco(tab.casas.valor[p]);
+                        tab.updateBanco(tab.game.valor[p]);
                     }else{
                         tab.game.j2.falencia = true;
                     }
-                    if(tab.game.getCapital(tab.game.j3)>tab.casas.valor[p]){
-                        tab.game.dimCapital(tab.casas.valor[p], tab.game.j3);
+                    if(tab.game.getCapital(tab.game.j3)>tab.game.valor[p]){
+                        tab.game.dimCapital(tab.game.valor[p], tab.game.j3);
                         tab.updateCapital(tab.game.j3);
-                        tab.updateBanco(tab.casas.valor[p]);
+                        tab.updateBanco(tab.game.valor[p]);
                     }else{
                         tab.game.j3.falencia = true;
                     }
-                    if(tab.game.getCapital(tab.game.j4)>tab.casas.valor[p]){
-                        tab.game.dimCapital(tab.casas.valor[p], tab.game.j4);
+                    if(tab.game.getCapital(tab.game.j4)>tab.game.valor[p]){
+                        tab.game.dimCapital(tab.game.valor[p], tab.game.j4);
                         tab.updateCapital(tab.game.j4);
-                        tab.updateBanco(tab.casas.valor[p]);
+                        tab.updateBanco(tab.game.valor[p]);
                     }else{
                         tab.game.j4.falencia = true;
                     }
         
-                    text2 += "\nTodos perderam $" + tab.casas.valor[p];
-                    text2 += "\nNovo Valor do Banco: " + tab.casas.valor[10];
+                    text2 += "\nTodos perderam $" + tab.game.valor[p];
+                    text2 += "\nNovo Valor do Banco: " + tab.game.valor[10];
                     text2 += "\nContinue Jogando!";
                     show.setText(text2);
                     rolardado.setEnabled(true);
@@ -245,7 +249,7 @@ public class Nav{
                         text2 += player_name + " perdeu 5% de seu capital";
                         tab.updateBanco(0.05f*cpt);
                         text2 += "\nAh, não! Mais sorte na próxima!";
-                        text2 += "\nNovo valor do banco: " + tab.casas.valor[10];
+                        text2 += "\nNovo valor do banco: " + tab.game.valor[10];
                     }
                     tab.updateCapital(player);
                     text2 += "\nNovo Capital: " + tab.game.getCapital(player);
@@ -274,13 +278,13 @@ public class Nav{
 
             yes.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e){
-                    tab.game.addCapital(tab.casas.valor[10], player);
+                    tab.game.addCapital(tab.game.valor[10], player);
                     tab.updateCapital(player);
                     String text2 = "";
-                    text2 += player_name + " coletou $" + tab.casas.valor[10];
+                    text2 += player_name + " coletou $" + tab.game.valor[10];
                     text2 += "\nNovo Capital: $" + tab.game.getCapital(player);
                     text2 += "\nContinue jogando!";
-                    tab.casas.valor[10] = 0f;
+                    tab.game.valor[10] = 0f;
                     tab.updateBanco(0);
                     show.setText(text2);
                     rolardado.setEnabled(true);
@@ -301,7 +305,7 @@ public class Nav{
             tab.updateCapital(player);
             tab.updateBanco(value);
             text += "\nNovo Capital: " + tab.game.getCapital(player);
-            text += "\nNovo Valor do Banco: " + tab.casas.valor[10];
+            text += "\nNovo Valor do Banco: " + tab.game.valor[10];
             text += "\nContinue Jogando!";
             show.setText(text);
             return;
@@ -385,7 +389,7 @@ public class Nav{
                 tab.updateCapital(player);
                 tab.updateBanco(500);
                 text += "\nCapital: " + tab.game.getCapital(player);
-                text += "\nNovo valor do Banco: " + tab.casas.valor[10];
+                text += "\nNovo valor do Banco: " + tab.game.valor[10];
                 text += "\nContinue jogando!";
             }else{
                 text += "Jogador faliu!";
@@ -576,7 +580,7 @@ public class Nav{
             tab.game.dimCapital(tab.game.getCapital(player)*0.1f, player);
             tab.updateCapital(player);
             text += "\nNovo Capital: " + tab.game.getCapital(player);
-            text += "\nNovo Valor do Banco: " + tab.casas.valor[10];
+            text += "\nNovo Valor do Banco: " + tab.game.valor[10];
             text += "\nContinue jogando!";
             show.setText(text);      
             return;      
@@ -591,8 +595,8 @@ public class Nav{
             if(tab.owner[p]==null||tab.owner[p].falencia){
                 text += player_name + " caiu em uma propriedade vazia\n";
 
-                if(tab.game.getCapital(player)>tab.casas.valor[p] && player == tab.game.getTurn()){
-                    text += "Deseja comprar a propriedade por " + tab.casas.valor[p] + "?\n";
+                if(tab.game.getCapital(player)>tab.game.valor[p] && player == tab.game.getTurn()){
+                    text += "Deseja comprar a propriedade por " + tab.game.valor[p] + "?\n";
                     yes.setEnabled(true);
                     no.setEnabled(true);
                     yes.setText("Comprar");
@@ -605,7 +609,7 @@ public class Nav{
                             String text2 = "";
                             text2 += player_name + " comprou a propriedade.";
                             tab.paineisCasa[p].setBackground(player.getColor());
-                            tab.game.dimCapital(tab.casas.valor[p], player);
+                            tab.game.dimCapital(tab.game.valor[p], player);
                             tab.updateCapital(player);
                             tab.owner[p] = player;
                             text2 += "\nCapital: " + tab.game.getCapital(player);
@@ -643,8 +647,8 @@ public class Nav{
             //Segundo Caso: O proprietario eh o jogador
             if(tab.owner[p]==player){
                 text += player_name + " parou em sua própria propriedade";
-                float custo_ampliar = tab.casas.valor[p]*2;
-                if(tab.game.getCapital(player)>custo_ampliar&&tab.ampliacoes[p]<5){
+                float custo_ampliar = tab.game.valor[p]*2;
+                if(tab.game.getCapital(player)>custo_ampliar&&tab.game.ampliacoes[p]<5){
                     rolardado.setEnabled(false);
                     text += "\nDeseja ampliar a propriedade por $" + custo_ampliar + " ?";
                     yes.setEnabled(true);
@@ -658,13 +662,13 @@ public class Nav{
                             String text2 = "";
                             tab.game.dimCapital(custo_ampliar, player);
                             tab.updateCapital(player);
-                            tab.casas.valor[p] = custo_ampliar;
-                            tab.casas.subtitle[p].setText("Aluguel: " + tab.casas.valor[p]);
+                            tab.game.valor[p] = custo_ampliar;
+                            tab.casas.subtitle[p].setText("Aluguel: " + tab.game.valor[p]);
                             text2 += player_name + " ampliou a propriedade";
-                            text2 += "\nNovo Custo: " + tab.casas.valor[p];
+                            text2 += "\nNovo Custo: " + tab.game.valor[p];
                             text2 += "\nCapital: " + tab.game.getCapital(player);
                             text2 += "Continue jogando!";
-                            tab.ampliacoes[p]++;
+                            tab.game.ampliacoes[p]++;
 
                             show.setText(text2);
                             rolardado.setEnabled(true);
@@ -678,7 +682,7 @@ public class Nav{
                             no.setEnabled(false);
                             String text2 = "";
                             text2 += player_name + " não ampliou sua propriedade";
-                            text2 += "\nCusto: " + tab.casas.valor[p];
+                            text2 += "\nCusto: " + tab.game.valor[p];
                             text2 += "\nCapital: " + tab.game.getCapital(player);
                             text2 += "\nContinue jogando!";
 
@@ -702,7 +706,7 @@ public class Nav{
                 text += player_name + " parou na propriedade de " + tab.owner[p].getName();
 
                 //Condicao 1: Poder tomar a casa
-                float custo_tomar = tab.casas.valor[p] * 3;
+                float custo_tomar = tab.game.valor[p] * 3;
                 if(tab.game.getCapital(player) > custo_tomar){
                     rolardado.setEnabled(false);
                     text += "\n" + player_name + " possui capital suficiente para tomar a casa\n";
@@ -741,11 +745,11 @@ public class Nav{
                             no.setEnabled(false);
                             String text2 = "";
                             text2 += "\n" + player_name + " não comprou a propriedade de " + tab.owner[p].getName();
-                            tab.game.dimCapital(tab.casas.valor[p], player);
-                            tab.game.addCapital(tab.casas.valor[p], tab.owner[p]);
+                            tab.game.dimCapital(tab.game.valor[p], player);
+                            tab.game.addCapital(tab.game.valor[p], tab.owner[p]);
                             tab.updateCapital(player);
                             tab.updateCapital(tab.owner[p]);
-                            text2 += "\nValor do Aluguel: $" + tab.casas.valor[p];
+                            text2 += "\nValor do Aluguel: $" + tab.game.valor[p];
                             text2 += "\n" + player_name + " pagou aluguel a " + tab.owner[p].getName();
                             text2 += "\nCapital: $" + tab.game.getCapital(player);
                             text2 += "\nContinue Jogando!";
@@ -756,13 +760,13 @@ public class Nav{
                         }
                     });
 
-                }else if(tab.game.getCapital(player) > tab.casas.valor[p]){
+                }else if(tab.game.getCapital(player) > tab.game.valor[p]){
                     text += "\nNão há capital suficiente para tomar a casa.";
-                    tab.game.dimCapital(tab.casas.valor[p], player);
-                    tab.game.addCapital(tab.casas.valor[p], tab.owner[p]);
+                    tab.game.dimCapital(tab.game.valor[p], player);
+                    tab.game.addCapital(tab.game.valor[p], tab.owner[p]);
                     tab.updateCapital(player);
                     tab.updateCapital(tab.owner[p]);
-                    text += "\nValor do Aluguel: $" + tab.casas.valor[p];
+                    text += "\nValor do Aluguel: $" + tab.game.valor[p];
                     text += "\n" + player_name + " pagou aluguel a " + tab.owner[p].getName();
                     text += "\nCapital: $" + tab.game.getCapital(tab.owner[p]);
                     text += "\nContinue Jogando!";
@@ -775,8 +779,8 @@ public class Nav{
                     int x = player.randomPropriedade();
                     player.removePropriedade(x);
                     tab.paineisCasa[x].setBackground(tab.owner[p].getColor());
-                    tab.casas.valor[x] = (float) 250;
-                    tab.ampliacoes[x] = 0;
+                    tab.game.valor[x] = (float) 250;
+                    tab.game.ampliacoes[x] = 0;
                     text += "\n" + player_name + " perdeu a propriedade da casa " + x;
                     text += "\n" + tab.owner[p].getName() + " agora é proprietário da casa " + x;
                     text += "\nContinue Jogando!";

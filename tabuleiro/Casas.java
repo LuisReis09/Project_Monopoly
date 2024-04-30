@@ -1,31 +1,40 @@
 package tabuleiro;
+import objects.Jogo;
 import javax.swing.*;
 import java.awt.*;
-import java.io.Serializable;
 
-public class Casas implements Serializable{
-    private static final long serialVersionUID = 5;
+public class Casas{
 
     //public final static Casas instance = new Casas();
 
-    int q = 38;
-    JPanel[] casas = new JPanel[q];
-    Color desocupada = new Color(212, 203, 203);
-    JLabel[] title = new JLabel[q];
-    JLabel[] subtitle = new JLabel[q];
-    JLabel[] indices = new JLabel[q];
-    float[] valor = new float[q];
+    transient int q = 38;
+    transient JPanel[] casas = new JPanel[q];
+    transient Color desocupada = new Color(212, 203, 203);
+    transient JLabel[] title = new JLabel[q];
+    transient JLabel[] subtitle = new JLabel[q];
+    transient JLabel[] indices = new JLabel[q];
+    Jogo game;
+    //float[] valor = new float[q];
+    /* O valor das casas precisa ser gravado aqui, porque algumas delas, como o Banco,
+    possuem valores que podem ser alterados durante o jogo e nao dependem de classes externas. 
+    Logo, um metodo de reload nao seria coerente. 
+    Porem, pude definir as outras como transient, para reduzir a necessidade da gravacao de dados e
+    o risco de incompatibilidade entre versoes do swing.*/
 
-    public Casas(){
+    public Casas(Jogo game){
+        this.game = game;
+        initCasas();
+        configCasas();
+        defineFunctions();
+    }
+
+    public void initCasas(){
         for(int i= 0; i<q; i++){
             casas[i] = new JPanel();
             title[i] = new JLabel();
             subtitle[i] = new JLabel();
             indices[i] = new JLabel();
         }
-
-        configCasas();
-        defineFunctions();
     }
 
     public void configCasas(){
@@ -74,8 +83,7 @@ public class Casas implements Serializable{
 
         title[1] = new JLabel("Propriedade");
         subtitle[1] = new JLabel();
-        valor[1]= (float) 250.00;
-        subtitle[1].setText("Aluguel: " + valor[1]);
+        subtitle[1].setText("Aluguel: " + game.valor[1]);
         title[1].setBounds(0, 45, 105, 15);
         subtitle[1].setBounds(0, 60, 105, 15);
         title[1].setFont(titulos);
@@ -93,8 +101,7 @@ public class Casas implements Serializable{
 
         title[2] = new JLabel("Propriedade");   
         subtitle[2] = new JLabel();
-        valor[2]= (float) 250.00;
-        subtitle[2].setText("Aluguel: " + valor[2]);
+        subtitle[2].setText("Aluguel: " + game.valor[2]);
         title[2].setBounds(0, 45, 105, 15);
         subtitle[2].setBounds(0, 60, 105, 15);
         title[2].setFont(titulos);
@@ -125,8 +132,7 @@ public class Casas implements Serializable{
 
         title[4] = new JLabel("Propriedade");
         subtitle[4] = new JLabel();
-        valor[4]= (float) 250.00;
-        subtitle[4].setText("Aluguel: " + valor[4]);
+        subtitle[4].setText("Aluguel: " + game.valor[4]);
         title[4].setBounds(0, 45, 105, 15);
         subtitle[4].setBounds(0, 60, 105, 15);
         title[4].setFont(titulos);
@@ -156,8 +162,7 @@ public class Casas implements Serializable{
 
         title[6] = new JLabel("Propriedade");
         subtitle[6] = new JLabel();
-        valor[6]= (float) 250.00;
-        subtitle[6].setText("Aluguel: " + valor[6]);
+        subtitle[6].setText("Aluguel: " + game.valor[6]);
         title[6].setBounds(0, 45, 105, 15);
         subtitle[6].setBounds(0, 60, 105, 15);
         title[6].setFont(titulos);
@@ -174,7 +179,7 @@ public class Casas implements Serializable{
         casas[6].setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
         title[7]= new JLabel("Sorte ou Azar?");
-        valor[7]= (float) 0.00;
+        game.valor[7]= (float) 0.00;
         title[7].setBounds(0, 45, 105, 15);
         title[7].setHorizontalAlignment(SwingConstants.CENTER);
         title[7].setFont(titulos);
@@ -188,8 +193,7 @@ public class Casas implements Serializable{
         
         title[8] = new JLabel("Propriedade");
         subtitle[8] = new JLabel();
-        valor[8]= (float) 250.00;
-        subtitle[8].setText("Aluguel: " + valor[8]);
+        subtitle[8].setText("Aluguel: " + game.valor[8]);
         title[8].setBounds(0, 45, 105, 15);
         subtitle[8].setBounds(0, 60, 105, 15);
         title[8].setFont(titulos);
@@ -207,8 +211,7 @@ public class Casas implements Serializable{
         
         title[9] = new JLabel("Propriedade");
         subtitle[9] = new JLabel();
-        valor[9]= (float) 250.00;
-        subtitle[9].setText("Aluguel: " + valor[9]);
+        subtitle[9].setText("Aluguel: " + game.valor[9]);
         title[9].setBounds(0, 45, 105, 15);
         subtitle[9].setBounds(0, 60, 105, 15);
         title[9].setFont(titulos);
@@ -225,7 +228,7 @@ public class Casas implements Serializable{
         casas[9].setBorder(BorderFactory.createLineBorder(Color.BLACK)); 
         
         title[10] = new JLabel("BANCO");
-        subtitle[10]= new JLabel("Valor: " + valor[7]);
+        subtitle[10]= new JLabel("Valor: " + game.valor[7]);
         title[10].setBounds(0, 45, 105, 15);
         subtitle[10].setBounds(0, 60, 105, 15);
         title[10].setHorizontalAlignment(SwingConstants.CENTER);
@@ -243,8 +246,7 @@ public class Casas implements Serializable{
         
         title[11] = new JLabel("Propriedade");
         subtitle[11] = new JLabel();
-        valor[11]= (float) 250.00;
-        subtitle[11].setText("Aluguel: " + valor[11]);
+        subtitle[11].setText("Aluguel: " + game.valor[11]);
         title[11].setBounds(0, 45, 105, 15);
         subtitle[11].setBounds(0, 60, 105, 15);
         title[11].setFont(titulos);
@@ -262,8 +264,7 @@ public class Casas implements Serializable{
 
         title[12] = new JLabel("Propriedade");
         subtitle[12] = new JLabel();
-        valor[12]= (float) 250.00;
-        subtitle[12].setText("Aluguel: " + valor[12]);
+        subtitle[12].setText("Aluguel: " + game.valor[12]);
         title[12].setBounds(0, 45, 105, 15);
         subtitle[12].setBounds(0, 60, 105, 15);
         title[12].setFont(titulos);
@@ -298,8 +299,7 @@ public class Casas implements Serializable{
 
         title[14] = new JLabel("Propriedade");
         subtitle[14] = new JLabel();
-        valor[14]= (float) 250.00;
-        subtitle[14].setText("Aluguel: " + valor[14]);
+        subtitle[14].setText("Aluguel: " + game.valor[14]);
         title[14].setBounds(0, 45, 105, 15);
         subtitle[14].setBounds(0, 60, 105, 15);
         title[14].setFont(titulos);
@@ -317,8 +317,7 @@ public class Casas implements Serializable{
 
         title[15] = new JLabel("Propriedade");
         subtitle[15] = new JLabel();
-        valor[15]= (float) 250.00;
-        subtitle[15].setText("Aluguel: " + valor[15]);
+        subtitle[15].setText("Aluguel: " + game.valor[15]);
         title[15].setBounds(0, 45, 105, 15);
         subtitle[15].setBounds(0, 60, 105, 15);
         title[15].setFont(titulos);
@@ -335,8 +334,8 @@ public class Casas implements Serializable{
         casas[15].setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
         title[16] = new JLabel("Imposto Geral");
-        valor[16] = (float) 400.00;
-        subtitle[16] = new JLabel("Valor: $" + valor[16]);
+        game.valor[16] = (float) 400.00;
+        subtitle[16] = new JLabel("Valor: $" + game.valor[16]);
         title[16].setBounds(0, 45, 105, 15);
         subtitle[16].setBounds(0, 60, 105, 15);
         title[16].setFont(titulos);
@@ -354,8 +353,7 @@ public class Casas implements Serializable{
 
         title[17] = new JLabel("Propriedade");
         subtitle[17] = new JLabel();
-        valor[17]= (float) 250.00;
-        subtitle[17].setText("Aluguel: " + valor[17]);
+        subtitle[17].setText("Aluguel: " + game.valor[17]);
         title[17].setBounds(0, 45, 105, 15);
         subtitle[17].setBounds(0, 60, 105, 15);
         title[17].setFont(titulos);
@@ -373,8 +371,7 @@ public class Casas implements Serializable{
 
         title[18] = new JLabel("Propriedade");
         subtitle[18] = new JLabel();
-        valor[18]= (float) 250.00;
-        subtitle[18].setText("Aluguel: " + valor[18]);
+        subtitle[18].setText("Aluguel: " + game.valor[18]);
         title[18].setBounds(0, 45, 105, 15);
         subtitle[18].setBounds(0, 60, 105, 15);
         title[18].setFont(titulos);
@@ -404,8 +401,7 @@ public class Casas implements Serializable{
 
         title[20] = new JLabel("Propriedade");
         subtitle[20] = new JLabel();
-        valor[20]= (float) 250.00;
-        subtitle[20].setText("Aluguel: " + valor[20]);
+        subtitle[20].setText("Aluguel: " + game.valor[20]);
         title[20].setBounds(0, 45, 105, 15);
         subtitle[20].setBounds(0, 60, 105, 15);
         title[20].setFont(titulos);
@@ -435,8 +431,7 @@ public class Casas implements Serializable{
         
         title[22] = new JLabel("Propriedade");
         subtitle[22] = new JLabel();
-        valor[22]= (float) 250.00;
-        subtitle[22].setText("Aluguel: " + valor[22]);
+        subtitle[22].setText("Aluguel: " + game.valor[22]);
         title[22].setBounds(0, 45, 105, 15);
         subtitle[22].setBounds(0, 60, 105, 15);
         title[22].setFont(titulos);
@@ -465,8 +460,8 @@ public class Casas implements Serializable{
         casas[23].setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
         title[24] = new JLabel("Pedágio");
-        valor[24]= (float) 500.00;
-        subtitle[24] = new JLabel("Valor: " + valor[24]);
+        game.valor[24]= (float) 500.00;
+        subtitle[24] = new JLabel("Valor: " + game.valor[24]);
         title[24].setBounds(0, 45, 105, 15);
         subtitle[24].setBounds(0, 60, 105, 15);
         title[24].setFont(titulos);
@@ -483,8 +478,7 @@ public class Casas implements Serializable{
         casas[24].setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
         title[25] = new JLabel("Cobrança");
-        valor[25]= (float) 250.00;
-        subtitle[25] = new JLabel("Valor: " + valor[25]);
+        subtitle[25] = new JLabel("Valor: " + game.valor[25]);
         title[25].setBounds(0, 45, 105, 15);
         subtitle[25].setBounds(0, 60, 105, 15);
         title[25].setFont(titulos);
@@ -502,8 +496,7 @@ public class Casas implements Serializable{
 
         title[26] = new JLabel("Propriedade");
         subtitle[26] = new JLabel();
-        valor[26]= (float) 250.00;
-        subtitle[26].setText("Aluguel: " + valor[26]);
+        subtitle[26].setText("Aluguel: " + game.valor[26]);
         title[26].setBounds(0, 45, 105, 15);
         subtitle[26].setBounds(0, 60, 105, 15);
         title[26].setFont(titulos);
@@ -521,8 +514,7 @@ public class Casas implements Serializable{
 
         title[27] = new JLabel("Propriedade");
         subtitle[27] = new JLabel();
-        valor[27]= (float) 250.00;
-        subtitle[27].setText("Aluguel: " + valor[27]);
+        subtitle[27].setText("Aluguel: " + game.valor[27]);
         title[27].setBounds(0, 45, 105, 15);
         subtitle[27].setBounds(0, 60, 105, 15);
         title[27].setFont(titulos);
@@ -540,8 +532,7 @@ public class Casas implements Serializable{
 
         title[28] = new JLabel("Propriedade");
         subtitle[28] = new JLabel();
-        valor[28]= (float) 250.00;
-        subtitle[28].setText("Aluguel: " + valor[28]);
+        subtitle[28].setText("Aluguel: " + game.valor[28]);
         title[28].setBounds(0, 45, 105, 15);
         subtitle[28].setBounds(0, 60, 105, 15);
         title[28].setFont(titulos);
@@ -571,8 +562,7 @@ public class Casas implements Serializable{
 
         title[30] = new JLabel("Propriedade");
         subtitle[30] = new JLabel();
-        valor[30]= (float) 250.00;
-        subtitle[30].setText("Aluguel: " + valor[30]);
+        subtitle[30].setText("Aluguel: " + game.valor[30]);
         title[30].setBounds(0, 45, 105, 15);
         subtitle[30].setBounds(0, 60, 105, 15);
         title[30].setFont(titulos);
@@ -602,8 +592,7 @@ public class Casas implements Serializable{
 
         title[32] = new JLabel("Propriedade");
         subtitle[32] = new JLabel();
-        valor[32]= (float) 250.00;
-        subtitle[32].setText("Aluguel: " + valor[32]);
+        subtitle[32].setText("Aluguel: " + game.valor[32]);
         title[32].setBounds(0, 45, 105, 15);
         subtitle[32].setBounds(0, 60, 105, 15);
         title[32].setFont(titulos);
@@ -621,8 +610,7 @@ public class Casas implements Serializable{
 
         title[33] = new JLabel("Propriedade");
         subtitle[33] = new JLabel();
-        valor[33]= (float) 250.00;
-        subtitle[33].setText("Aluguel: " + valor[33]);
+        subtitle[33].setText("Aluguel: " + game.valor[33]);
         title[33].setBounds(0, 45, 105, 15);
         subtitle[33].setBounds(0, 60, 105, 15);
         title[33].setFont(titulos);
@@ -640,7 +628,7 @@ public class Casas implements Serializable{
 
         title[34] = new JLabel("Imposto Veicular");
         subtitle[34] = new JLabel();
-        valor[34]= (float) 400.00;
+        game.valor[34]= (float) 400.00;
         subtitle[34].setText("Valor: 10%");
         title[34].setBounds(0, 45, 105, 15);
         subtitle[34].setBounds(0, 60, 105, 15);
@@ -658,8 +646,8 @@ public class Casas implements Serializable{
         casas[34].setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
         title[35] = new JLabel("Imposto Geral");
-        valor[35] = (float) 500.00;
-        subtitle[35] = new JLabel("Valor: " + valor[35]);
+        game.valor[35] = (float) 500.00;
+        subtitle[35] = new JLabel("Valor: " + game.valor[35]);
         title[35].setBounds(0, 45, 105, 15);
         subtitle[35].setBounds(0, 60, 105, 15);
         title[35].setFont(titulos);
@@ -677,8 +665,7 @@ public class Casas implements Serializable{
 
         title[36] = new JLabel("Propriedade");
         subtitle[36] = new JLabel();
-        valor[36]= (float) 250.00;
-        subtitle[36].setText("Aluguel: " + valor[36]);
+        subtitle[36].setText("Aluguel: " + game.valor[36]);
         title[36].setBounds(0, 45, 105, 15);
         subtitle[36].setBounds(0, 60, 105, 15);
         title[36].setFont(titulos);
@@ -696,8 +683,7 @@ public class Casas implements Serializable{
 
         title[37] = new JLabel("Propriedade");
         subtitle[37] = new JLabel();
-        valor[37]= (float) 250.00;
-        subtitle[37].setText("Aluguel: " + valor[37]);
+        subtitle[37].setText("Aluguel: " + game.valor[37]);
         title[37].setBounds(0, 45, 105, 15);
         subtitle[37].setBounds(0, 60, 105, 15);
         title[37].setFont(titulos);
@@ -723,7 +709,7 @@ public class Casas implements Serializable{
     }
 
     public float[] getValores(){
-        return valor;
+        return game.valor;
     }
 
     public JPanel[] getCasas(){

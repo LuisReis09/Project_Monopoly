@@ -3,11 +3,20 @@ import java.io.Serializable;
 
 public class Jogo implements Serializable{
     private static final long serialVersionUID = 8;
+    /*
+        Essa classe eh responsavel por armazenar informacoes sobre o jogo
+        Ela eh fundamental para que as classes do tabuleiro possam acessar informacoes sobre os jogadores
+        e sobre o estado do jogo.
+        Ela eh tambem fundamental para guardar as informacoes do Save 
+    */
     
     public Player j1 = new Player();
     public Player j2 = new Player();
     public Player j3 = new Player();
     public Player j4 = new Player();
+    public float[] valor = new float[38];
+    public int[] ampliacoes = new int[38];
+
 
     public Player turn = j1;
     public int qfalidos;
@@ -28,6 +37,11 @@ public class Jogo implements Serializable{
         j2.capital = (float) 5000;
         j3.capital = (float) 5000;
         j4.capital = (float) 5000;
+
+        for(int i=0; i<38; i++){
+            valor[i] = (float) 250;
+            ampliacoes[i] = 0;
+        }
     }
 
     public String Str_Players(){

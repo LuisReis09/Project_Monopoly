@@ -2,11 +2,13 @@ package tabuleiro;
 import util.*;
 import javax.swing.*;
 import java.awt.*;
-import java.io.Serializable;
 
-public class Pinos implements Serializable{
-    //define as configuracoes iniciais dos pinos
-    private static final long serialVersionUID = 6;
+public class Pinos{
+    /*
+        Essa classe eh responsavel pelas configuracoes iniciais dos pinos dos jogadores
+        Ela eh fundamental para que os usuarios possam ver informacoes sobre a execucao do jogo
+        Com ela, eh possivel que os jogadores vejam suas posicoes no tabuleiro.
+    */
     JPanel pino_j1 = new JPanel();
     JPanel pino_j2 = new JPanel();
     JPanel pino_j3 = new JPanel();
@@ -16,7 +18,7 @@ public class Pinos implements Serializable{
     public void update(Saves save){
         this.casas = save.c.getCasas();
         configPosition();
-        layoutPinos();
+        layoutPinos();        
     }
 
     public JPanel getPino(int n){

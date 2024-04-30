@@ -10,7 +10,7 @@ public class Saves implements Serializable{
     //Dessa forma, o foco da main sera apenas a troca de telas
 
     public Jogo game;
-    public Casas c;
+    public transient Casas c;
     public transient Tabuleiro tab;
     public transient Nav nav;
     public transient Pinos p;
@@ -19,21 +19,24 @@ public class Saves implements Serializable{
 
     public Saves(){
         p = new Pinos();
-        c = new Casas();
         game = new Jogo();
+        c = new Casas(game);
         tab = new Tabuleiro(c, game);
         tab.setPinos(p);
         nav = new Nav(tab);
         p.update(this);
     }
 
-    public void initTab(){
-        p = new Pinos(); 
+    public void initSave(){
+        c = new Casas(game);
         tab = new Tabuleiro(c, game);
         nav = new Nav(tab);
+        p = new Pinos(); 
+        tab.repaintBackgrounds();
         tab.setPinos(p);
         p.update(this);
-        nav.attTurn();
-
+        nav.updateTurn();
+        tab.reloadOwners();
+        tab.reloadPositions();
     }
 }

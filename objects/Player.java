@@ -6,6 +6,13 @@ import java.awt.*;
 public class Player implements Serializable{
     private static final long serialVersionUID = 2;
 
+    /*
+        Fornece atributos basicos que possibilitam manipular jogadores de maneira individual.
+        Eh uma classe primordial, nao depende de nenhuma outra classe para funcionar.
+        Eh uma das unicas classes que realmente tem seus atributos guardados ao salvar o jogo.
+        Alem disso, eh tambem uma das unicas classes que nao precisam estar armazenadas na classe bau "Save".
+    */
+
     private String name;
     protected float capital;
     Color cor;

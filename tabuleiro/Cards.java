@@ -6,6 +6,11 @@ import java.awt.*;
 import objects.Jogo;
 
 public class Cards {
+    /* 
+        Essa classe eh responsavel por criar paineis de informacoes dos jogadores
+        que ficam no meio do painel do tabuleiro.
+        Ela eh fundamental para que os usuarios possam ver informacoes sobre a execucao do jogo
+    */
     JPanel card_j1 = new JPanel();
     JPanel card_j2 = new JPanel();
     JPanel card_j3 = new JPanel();

@@ -5,20 +5,19 @@ import java.io.*;
 import java.util.Scanner;
 import util.*;
 import privacy.Admin;
-import tabuleiro.Pinos;
 
 public class Main{
     Saves save;
-    //Pinos pinos = new Pinos();
     static Main obj = new Main();
-
     
     public static void main(String[] args){
+        //A principal funcao dessa clase eh ser a main do jogo
+        //Realizando a troca de janelas e a inicializacao do jogo
         obj.runInicio();   
     }
     
     public void runInicio(){
-        //define a tela 1
+        //define a tela inicial
         JFrame janela = new JFrame("Monopoly");
         janela.setSize(1000, 800);
         janela.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -121,8 +120,7 @@ public class Main{
                     FileInputStream fis = new FileInputStream("util/save.txt");
                     ObjectInputStream ois = new ObjectInputStream(fis);
                     save = (Saves) ois.readObject();
-                    save.initTab();
-                    save.tab.reloadPositions();
+                    save.initSave();
                     fis.close();
                     ois.close();
                     runJogo();

@@ -1,11 +1,13 @@
 package tabuleiro;
 import objects.*;
 import javax.swing.*;
-//import java.awt.*;
-//import util.*;
 
 public class Tabuleiro{
-    //fornece metodos que realizam a manutencao das casas, dos pinos e dos cards
+    /*
+        Essa classe serve como uma ponte de funcoes entre as classes.
+        Seus principais metodos consistem em recarregar o estado do jogo,
+        Além de fornecer metodos uteis para manipular as classes cards, casas e pinos.
+    */
     public Jogo game;
     JPanel tab = new JPanel();
     final int q= 38;
@@ -14,7 +16,6 @@ public class Tabuleiro{
     Pinos pinos;
     JPanel[] paineisCasa;
     Player[] owner = new Player[q];
-    int[] ampliacoes = new int[q];
 
     public Cards cards;
     
@@ -27,7 +28,6 @@ public class Tabuleiro{
         
         for(int i=0; i<q; i++){
             owner[i]= null;
-            ampliacoes[i]= 0;
         }
     }
 
@@ -57,6 +57,7 @@ public class Tabuleiro{
         pinos.pino_j3.setLocation(paineisCasa[x].getX()+5, paineisCasa[x].getY()+25);
         x = game.j4.getPosition();
         pinos.pino_j4.setLocation(paineisCasa[x].getX()+25, paineisCasa[x].getY()+25);
+        pinos.layoutPinos();
     }
 
 
@@ -188,8 +189,8 @@ public class Tabuleiro{
     }
 
     public void updateBanco(float valor){
-        this.casas.valor[10] += valor;
-        String format = String.format("%.2f", this.casas.valor[10]);
+        game.valor[10] += valor;
+        String format = String.format("%.2f", game.valor[10]);
         casas.subtitle[10].setText("Valor: " + format);
     }
 
@@ -201,7 +202,7 @@ public class Tabuleiro{
                 p = game.j1.propriedades.get(i);
                 paineisCasa[p].setBackground(casas.desocupada);
                 owner[p] = null;
-                casas.valor[p] = (float) 250;
+                game.valor[p] = (float) 250;
             }
             game.j1.propriedades.clear();
         }
@@ -211,7 +212,7 @@ public class Tabuleiro{
                 p = game.j2.propriedades.get(i);
                 paineisCasa[p].setBackground(casas.desocupada);
                 owner[p] = null;
-                casas.valor[p] = (float) 250;
+                game.valor[p] = (float) 250;
             }
             game.j2.propriedades.clear();
         }
@@ -221,7 +222,7 @@ public class Tabuleiro{
                 p = game.j3.propriedades.get(i);
                 paineisCasa[p].setBackground(casas.desocupada);
                 owner[p] = null;
-                casas.valor[p] = (float) 250;
+                game.valor[p] = (float) 250;
             }
             game.j3.propriedades.clear();
         }
@@ -231,16 +232,31 @@ public class Tabuleiro{
                 p = game.j4.propriedades.get(i);
                 paineisCasa[p].setBackground(casas.desocupada);
                 owner[p] = null;
-                casas.valor[p] = (float) 250;
+                game.valor[p] = (float) 250;
             }
             game.j4.propriedades.clear();
         }
-    }	
+    }
+    
+    public void reloadOwners(){
+        for(int i=0; i<38; i++){
+            if(game.j1.propriedades.contains(i)){
+                owner[i] = game.j1;
+            }else if(game.j2.propriedades.contains(i)){
+                owner[i] = game.j2;
+            }else if(game.j3.propriedades.contains(i)){
+                owner[i] = game.j3;
+            }else if(game.j4.propriedades.contains(i)){
+                owner[i] = game.j4;
+            }
+        }
+    }
 
     public void repaintBackgrounds(){
         for(int i=0; i<38; i++){
             if(owner[i] != null){
                 paineisCasa[i].setBackground(owner[i].getColor());
+                casas.subtitle[i].setText("Valor: " + game.valor[i]);
             }
         }
     }
