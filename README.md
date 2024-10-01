@@ -4,7 +4,7 @@ Este projeto foi desenvolvido como parte da disciplina **Programação Orientada
 ## Tecnologias Utilizadas
 - **Linguagem de Programação**: Java
 - **Interface Gráfica**: Swing
-  + Gerenciamento de informações em arquivos ".txt"
+- Gerenciamento de informações em arquivos ".txt"
 
 ## Descrição do Projeto
 Este projeto consiste na criação de um jogo digital baseado no clássico jogo de tabuleiro **Monopoly**. Os jogadores competem para construir um império financeiro, adquirindo propriedades e gerenciando recursos ao longo de suas jogadas. O objetivo final do jogo é alcançar a supremacia econômica, levando os oponentes à falência.
