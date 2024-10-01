@@ -22,7 +22,7 @@ O objetivo do jogo é conquistar a maior quantidade de capital possível no tabu
 1. Certifique-se de ter o **Java JDK** instalado (versão mínima: 8).
 2. Clone o repositório:
    ```bash
-   git clone https://github.com/LuisReis09/Project-Monopoly/
+   git clone https://github.com/LuisReis09/Project_Monopoly/
    ```
 3. Compile e execute o projeto:
    ```bash
